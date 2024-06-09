@@ -83,6 +83,6 @@ class ProbesController extends BaseController
         $probes = Probes::where('team_id', auth()->user()->currentTeam->id)->find($id);
         $probes->delete();
 
-        return $this->sendResponse([], 'Probe deleted successfully.');
+        return $this->sendResponse([], 'Probe deleted successfully.', status: 204);
     }
 }

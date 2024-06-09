@@ -1,4 +1,4 @@
-POST http://localhost/api/auth/login HTTP/1.1
+POST http://{{host}}/api/auth/login HTTP/1.1
 accept: application/json
 content-type: application/json
 
@@ -8,10 +8,13 @@ content-type: application/json
 }
 
 > {%
-    client.global.set("token", response.body.data.token);
+client.test("Status code is 200", function() {
+    client.assert(response.status === 200, "Expected 200 OK");
+});
+client.global.set("token", response.body.data.token);
 %}
 ###
-POST http://localhost/api/probe-types HTTP/1.1
+POST http://{{host}}/api/probe-types HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
@@ -22,25 +25,46 @@ authorization: Bearer {{token}}
 }
 
 > {%
-    client.global.set("probe_type_id", response.body.data.id);
+client.test("Status code is 201", function() {
+    client.assert(response.status === 201, "Expected 201 Created");
+});
+client.global.set("probe_type_id", response.body.data.id);
 %}
 ###
-GET http://localhost/api/probe-types HTTP/1.1
+GET http://{{host}}/api/probe-types HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
+
+> {%
+client.test("Status code is 200", function() {
+    client.assert(response.status === 200, "Expected 200 OK");
+});
+  %}
 ###
-GET http://localhost/api/probe-types/{{probe_type_id}} HTTP/1.1
+GET http://{{host}}/api/probe-types/{{probe_type_id}} HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
+
+> {%
+client.test("Status code is 200", function() {
+    client.assert(response.status === 200, "Expected 200 OK");
+});
+  %}
 ###
-DELETE http://localhost/api/probe-types/{{probe_type_id}} HTTP/1.1
+DELETE http://{{host}}/api/probe-types/{{probe_type_id}} HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
+
+> {%
+client.test("Status code is 204", function() {
+    client.assert(response.status === 204, "Expected 204 No Content");
+});
+  %}
 ###
-POST http://localhost/api/metric-types HTTP/1.1
+POST http://{{host}}/api/metric-types HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
@@ -53,25 +77,46 @@ authorization: Bearer {{token}}
 }
 
 > {%
-    client.global.set("metric_type_id", response.body.data.id);
+client.test("Status code is 201", function() {
+    client.assert(response.status === 201, "Expected 201 Created");
+});
+client.global.set("metric_type_id", response.body.data.id);
 %}
 ###
-GET http://localhost/api/metric-types HTTP/1.1
+GET http://{{host}}/api/metric-types HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
+
+> {%
+client.test("Status code is 200", function() {
+    client.assert(response.status === 200, "Expected 200 OK");
+});
+  %}
 ###
-GET http://localhost/api/metric-types/{{metric_type_id}} HTTP/1.1
+GET http://{{host}}/api/metric-types/{{metric_type_id}} HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
+
+> {%
+client.test("Status code is 200", function() {
+    client.assert(response.status === 200, "Expected 200 OK");
+});
+  %}
 ###
-DELETE http://localhost/api/metric-types/{{metric_type_id}} HTTP/1.1
+DELETE http://{{host}}/api/metric-types/{{metric_type_id}} HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
+
+> {%
+client.test("Status code is 204", function() {
+    client.assert(response.status === 204, "Expected 204 No Content");
+});
+  %}
 ###
-POST http://localhost/api/probes HTTP/1.1
+POST http://{{host}}/api/probes HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
@@ -83,20 +128,41 @@ authorization: Bearer {{token}}
 }
 
 > {%
-    client.global.set("probe_id", response.body.data.id);
+client.test("Status code is 201", function() {
+    client.assert(response.status === 201, "Expected 201 Created");
+});
+client.global.set("probe_id", response.body.data.id);
 %}
 ###
-GET http://localhost/api/probes HTTP/1.1
+GET http://{{host}}/api/probes HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
+
+> {%
+client.test("Status code is 200", function() {
+    client.assert(response.status === 200, "Expected 200 OK");
+});
+  %}
 ###
-GET http://localhost/api/probes/{{probe_id}} HTTP/1.1
+GET http://{{host}}/api/probes/{{probe_id}} HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
+
+> {%
+client.test("Status code is 200", function() {
+    client.assert(response.status === 200, "Expected 200 OK");
+});
+  %}
 ###
-DELETE http://localhost/api/probes/{{probe_id}} HTTP/1.1
+DELETE http://{{host}}/api/probes/{{probe_id}} HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
+
+> {%
+client.test("Status code is 204", function() {
+    client.assert(response.status === 204, "Expected 204 No Content");
+});
+  %}
