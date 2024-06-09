@@ -1,0 +1,102 @@
+POST http://localhost/api/auth/login HTTP/1.1
+accept: application/json
+content-type: application/json
+
+{
+  "email": "jms@grazulex.be",
+  "password": "password"
+}
+
+> {%
+    client.global.set("token", response.body.data.token);
+%}
+###
+POST http://localhost/api/probe-types HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+  "name": "{{$random.alphanumeric(15)}}",
+  "description": "Test Probe Type"
+}
+
+> {%
+    client.global.set("probe_type_id", response.body.data.id);
+%}
+###
+GET http://localhost/api/probe-types HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+###
+GET http://localhost/api/probe-types/{{probe_type_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+###
+DELETE http://localhost/api/probe-types/{{probe_type_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+###
+POST http://localhost/api/metric-types HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+  "name": "{{$random.alphanumeric(15)}}",
+  "description": "Test metric Type",
+  "unit": "C°"
+
+}
+
+> {%
+    client.global.set("metric_type_id", response.body.data.id);
+%}
+###
+GET http://localhost/api/metric-types HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+###
+GET http://localhost/api/metric-types/{{metric_type_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+###
+DELETE http://localhost/api/metric-types/{{metric_type_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+###
+POST http://localhost/api/probes HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+  "name": "{{$random.alphanumeric(15)}}",
+  "description": "blablabla",
+  "probe_type_id": 1
+}
+
+> {%
+    client.global.set("probe_id", response.body.data.id);
+%}
+###
+GET http://localhost/api/probes HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+###
+GET http://localhost/api/probes/{{probe_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+###
+DELETE http://localhost/api/probes/{{probe_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}

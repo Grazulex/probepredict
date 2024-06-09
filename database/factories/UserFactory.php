@@ -52,7 +52,7 @@ class UserFactory extends Factory
     /**
      * Indicate that the user should have a personal team.
      */
-    public function withPersonalTeam(callable $callback = null): static
+    public function withPersonalTeam(?callable $callback = null): static
     {
         if (! Features::hasTeamFeatures()) {
             return $this->state([]);
@@ -68,5 +68,12 @@ class UserFactory extends Factory
                 ->when(is_callable($callback), $callback),
             'ownedTeams'
         );
+    }
+
+    public function withApiToken(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->createToken('api-token');
+        });
     }
 }
