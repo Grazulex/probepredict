@@ -33,7 +33,7 @@ class DateTimeResource extends JsonResource
                 'hour' => $date->hour,
                 'minute' => $date->minute,
                 'second' => $date->second,
-            ]
+            ],
         ];
     }
 }

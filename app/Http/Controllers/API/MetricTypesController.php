@@ -16,7 +16,8 @@ class MetricTypesController extends BaseController
     {
         return $this->sendResponse(MetricTypeResource::collection(MetricTypes::all()), 'Metric Types retrieved successfully.');
     }
-   public function store(Request $request): JsonResponse
+
+    public function store(Request $request): JsonResponse
     {
         $input = $request->all();
         $validator = Validator::make($input, [

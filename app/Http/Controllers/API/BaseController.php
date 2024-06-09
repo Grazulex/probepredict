@@ -26,7 +26,7 @@ class BaseController extends Controller
                 'roles' => request()->user()->getRoleNames(),
                 'team' => request()->user()->currentTeam->name,
                 'at' => new DateTimeResource(now()),
-            ]
+            ],
         ];
 
         return response()->json($response, $status);
@@ -48,7 +48,7 @@ class BaseController extends Controller
                 'roles' => request()->user()->getRoleNames(),
                 'team' => request()->user()->currentTeam->name,
                 'at' => new DateTimeResource(now()),
-            ]
+            ],
         ];
 
         if (! empty($errorMessages)) {
