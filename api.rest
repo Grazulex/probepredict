@@ -53,17 +53,6 @@ client.test("Status code is 200", function() {
 });
   %}
 ###
-DELETE http://{{host}}/api/probe-types/{{probe_type_id}} HTTP/1.1
-accept: application/json
-content-type: application/json
-authorization: Bearer {{token}}
-
-> {%
-client.test("Status code is 204", function() {
-    client.assert(response.status === 204, "Expected 204 No Content");
-});
-  %}
-###
 POST http://{{host}}/api/metric-types HTTP/1.1
 accept: application/json
 content-type: application/json
@@ -102,17 +91,6 @@ authorization: Bearer {{token}}
 > {%
 client.test("Status code is 200", function() {
     client.assert(response.status === 200, "Expected 200 OK");
-});
-  %}
-###
-DELETE http://{{host}}/api/metric-types/{{metric_type_id}} HTTP/1.1
-accept: application/json
-content-type: application/json
-authorization: Bearer {{token}}
-
-> {%
-client.test("Status code is 204", function() {
-    client.assert(response.status === 204, "Expected 204 No Content");
 });
   %}
 ###
@@ -156,13 +134,74 @@ client.test("Status code is 200", function() {
 });
   %}
 ###
+POST http://{{host}}/api/metrics HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+  "value": 50,
+  "metric_type_id": {{metric_type_id}},
+  "probe_id": {{probe_id}}
+}
+
+> {%
+    client.test("Status code is 201", function() {
+        client.assert(response.status === 201, "Expected 201 Created");
+    });
+    client.global.set("metric_id", response.body.data.id);
+%}
+###
+GET http://{{host}}/api/metrics/{{probe_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+###
+
+DELETE http://{{host}}/api/metrics/{{metric_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+> {%
+    client.test("Status code is 204", function() {
+        client.assert(response.status === 204, "Expected 204 No Content");
+    });
+%}
+
+###
+
 DELETE http://{{host}}/api/probes/{{probe_id}} HTTP/1.1
 accept: application/json
 content-type: application/json
 authorization: Bearer {{token}}
 
 > {%
-client.test("Status code is 204", function() {
-    client.assert(response.status === 204, "Expected 204 No Content");
-});
-  %}
+    client.test("Status code is 204", function() {
+        client.assert(response.status === 204, "Expected 204 No Content");
+    });
+%}
+
+###
+DELETE http://{{host}}/api/metric-types/{{metric_type_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+> {%
+    client.test("Status code is 204", function() {
+        client.assert(response.status === 204, "Expected 204 No Content");
+    });
+%}
+###
+DELETE http://{{host}}/api/probe-types/{{probe_type_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+> {%
+    client.test("Status code is 204", function() {
+        client.assert(response.status === 204, "Expected 204 No Content");
+    });
+%}

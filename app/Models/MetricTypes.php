@@ -16,4 +16,9 @@ class MetricTypes extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function metrics()
+    {
+        return $this->hasMany(ProbeMetrics::class);
+    }
 }

@@ -25,4 +25,9 @@ class Probes extends Model
     {
         return $this->belongsTo(ProbeTypes::class);
     }
+
+    public function metrics()
+    {
+        return $this->hasMany(ProbeMetrics::class, 'probe_id');
+    }
 }

@@ -81,6 +81,11 @@ class ProbesController extends BaseController
     public function destroy(int $id): JsonResponse
     {
         $probes = Probes::where('team_id', auth()->user()->currentTeam->id)->find($id);
+
+        if (is_null($probes)) {
+            return $this->sendError('Probe not found.');
+        }
+
         $probes->delete();
 
         return $this->sendResponse([], 'Probe deleted successfully.', status: 204);

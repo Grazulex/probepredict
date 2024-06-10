@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('probe_metrics', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('probe_id')->constrained()->onDelete('cascade');
+            $table->foreignId('metric_type_id')->constrained()->onDelete('cascade');
+            $table->string('value');
             $table->timestamps();
         });
     }

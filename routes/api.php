@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\MetricTypesController;
+use App\Http\Controllers\API\ProbeMetricsController;
 use App\Http\Controllers\API\ProbesController;
 use App\Http\Controllers\API\ProbeTypesController;
 use App\Http\Controllers\API\RegisterController;
@@ -56,5 +57,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
                 Route::post('/', 'store');
                 Route::get('/', 'index');
             });
+
+        Route::controller(ProbeMetricsController::class)
+            ->prefix('metrics')
+            ->group(function () {
+                Route::get('/{id}', 'index');
+                Route::post('/', 'store');
+                Route::delete('/{id}', 'destroy');
+            });
+
     });
 });
