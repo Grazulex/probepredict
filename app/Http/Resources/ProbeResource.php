@@ -27,7 +27,9 @@ class ProbeResource extends JsonResource
             'probe_type' => new ProbeTypeResource($this->probeType),
             'created_at' => new DateTimeResource($this->created_at),
             'updated_at' => new DateTimeResource($this->updated_at),
-            'rules' => ProbeRuleResource::collection($this->rules),
+            'rules' => $this->when($request->route()->getPrefix() === 'api/probes', function () {
+                return ProbeRuleResource::collection($this->rules);
+            }),
             'last_metrics' => ProbeMetricResource::collection($metrics),
         ];
     }

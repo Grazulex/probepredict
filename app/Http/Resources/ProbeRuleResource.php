@@ -18,7 +18,9 @@ class ProbeRuleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'probe_id' => $this->probe_id,
+            'probe' => $this->when($request->route()->getPrefix() !== 'api/probes', function () {
+                return new ProbeResource($this->probe);
+            }),
             'metric_type_id' => new MetricTypeResource($this->metric_type),
             'operator' => $this->operator,
             'condition' => $this->condition,
