@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Events\CalculatProcessed;
 use App\Http\Resources\ProbeMetricResource;
 use App\Models\ProbeMetrics;
 use App\Models\Probes;
@@ -45,6 +46,7 @@ class ProbeMetricsController extends BaseController
         }
 
         $probeMetric = ProbeMetrics::create($input);
+        CalculatProcessed::dispatch($probeMetric);
 
         return $this->sendResponse(new ProbeMetricResource($probeMetric), 'Metric created successfully.', 201);
     }

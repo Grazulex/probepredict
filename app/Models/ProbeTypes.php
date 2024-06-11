@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProbeTypes extends Model
 {
@@ -16,7 +17,7 @@ class ProbeTypes extends Model
         'updated_at',
     ];
 
-    public function probes()
+    public function probes(): HasMany
     {
         return $this->hasMany(Probes::class);
     }

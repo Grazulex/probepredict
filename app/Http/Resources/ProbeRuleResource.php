@@ -7,7 +7,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProbeMetricResource extends JsonResource
+class ProbeRuleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +18,11 @@ class ProbeMetricResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'metric_type' => new MetricTypeResource($this->metric_type),
-            'value' => $this->value,
-            'created_at' => new DateTimeResource($this->created_at),
+            'probe_id' => $this->probe_id,
+            'metric_type_id' => new MetricTypeResource($this->metric_type),
+            'operator' => $this->operator,
+            'condition' => $this->condition,
+            'estimation' => new DateTimeResource($this->estimation),
         ];
     }
 }

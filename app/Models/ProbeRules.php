@@ -6,14 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProbeMetrics extends Model
+class ProbeRules extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'probe_id',
         'metric_type_id',
-        'value',
+        'operator',
+        'condition',
+        'estimation',
+    ];
+
+    protected $casts = [
+        'condition' => 'float',
+        'estimation' => 'datetime',
     ];
 
     public function probe(): BelongsTo

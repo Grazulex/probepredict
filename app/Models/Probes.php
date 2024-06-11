@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Probes extends Model
 {
@@ -16,18 +18,23 @@ class Probes extends Model
         'description',
     ];
 
-    public function team()
+    public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
     }
 
-    public function probeType()
+    public function probeType(): BelongsTo
     {
         return $this->belongsTo(ProbeTypes::class);
     }
 
-    public function metrics()
+    public function metrics(): HasMany
     {
         return $this->hasMany(ProbeMetrics::class, 'probe_id');
+    }
+
+    public function rules(): HasMany
+    {
+        return $this->hasMany(ProbeRules::class, 'probe_id');
     }
 }
