@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
-use App\Events\CalculateProcessed;
 use App\Http\Resources\ProbeMetricResource;
 use App\Models\ProbeMetrics;
 use App\Models\Probes;
@@ -46,7 +45,7 @@ class ProbeMetricsController extends BaseController
         }
 
         $probeMetric = ProbeMetrics::create($input);
-        CalculateProcessed::dispatch($probe, $probeMetric->metric_type);
+        $probe->probeType->getCalculationStrategy()->calculate($probe, $probeMetric->metric_type);
 
         return $this->sendResponse(new ProbeMetricResource($probeMetric), 'Metric created successfully.', 201);
     }
@@ -66,7 +65,7 @@ class ProbeMetricsController extends BaseController
 
         $old_metric_type = $metric->metric_type;
         $metric->delete();
-        CalculateProcessed::dispatch($probe, $old_metric_type);
+        $probe->probeType->getCalculationStrategy()->calculate($probe, $old_metric_type);
 
         return $this->sendResponse([], 'Metric deleted successfully.', 204);
     }

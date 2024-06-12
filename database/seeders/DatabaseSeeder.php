@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProbeTypeEnum;
 use App\Models\MetricTypes;
 use App\Models\ProbeTypes;
 use App\Models\User;
@@ -47,7 +48,22 @@ class DatabaseSeeder extends Seeder
 
         ProbeTypes::factory()->create([
             'name' => 'Environmental',
-            'description' => 'Environmental probes',
+            'description' => 'Environmental probes (temperature, humidity, ...)',
+            'enum' => ProbeTypeEnum::ENVIRONMENT->value,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        ProbeTypes::factory()->create([
+            'name' => 'Battery',
+            'description' => 'Battery probes (voltage, current, ...)',
+            'enum' => ProbeTypeEnum::BATTERY->value,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        ProbeTypes::factory()->create([
+            'name' => 'Car',
+            'description' => 'Car probes (voltage, km, ...)',
+            'enum' => ProbeTypeEnum::CAR->value,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

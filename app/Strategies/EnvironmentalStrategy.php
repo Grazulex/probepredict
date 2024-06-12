@@ -2,22 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Events;
+namespace App\Strategies;
 
 use App\Models\MetricTypes;
 use App\Models\ProbeMetrics;
 use App\Models\Probes;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
-class CalculateProcessed
+class EnvironmentalStrategy implements CalculationStrategy
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public function __construct(Probes $probes, MetricTypes $metricTypes)
+    public function calculate(Probes $probes, MetricTypes $metricTypes): void
     {
-        //get rule for this metric
         $rule = $probes->rules->where('metric_type_id', $metricTypes->id)->first();
         if ($rule === null) {
             $condition = 0;
@@ -46,20 +40,15 @@ class CalculateProcessed
         if ($quantity > 1) {
             $time_to_condition = 0;
             $probeMetric = $metrics->last();
-            //echo "The average rate of change is: " . $diff_per_sec / $quantity;
-
             switch ($operator) {
                 case '>':
                     $time_to_condition = ($condition - $probeMetric->value) / ($diff_per_sec / $quantity);
-                    //echo "The metric will higher than $condition at: " . $probeMetric->created_at->addSeconds($time_to_condition);
                     break;
                 case '<':
                     $time_to_condition = ($probeMetric->value - $condition) / ($diff_per_sec / $quantity);
-                    //echo "The metric will lower than $condition at: " . $probeMetric->created_at->addSeconds($time_to_condition);
                     break;
                 case '=':
                     $time_to_condition = abs($condition - $probeMetric->value) / ($diff_per_sec / $quantity);
-                    //echo "The metric will reach $condition at: " . $probeMetric->created_at->addSeconds($time_to_condition);
                     break;
             }
             if ($rule !== null) {
