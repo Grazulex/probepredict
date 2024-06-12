@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Events;
 
+use App\Models\MetricTypes;
 use App\Models\ProbeMetrics;
+use App\Models\Probes;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CalculatProcessed
+class CalculateProcessed
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(ProbeMetrics $probeMetric)
+    public function __construct(Probes $probes, MetricTypes $metricTypes)
     {
         //get rule for this metric
-        $rule = $probeMetric->probe->rules->where('metric_type_id', $probeMetric->metric_type_id)->first();
+        $rule = $probes->rules->where('metric_type_id', $metricTypes->id)->first();
         if ($rule === null) {
             $condition = 0;
             $operator = '=';
@@ -24,15 +26,15 @@ class CalculatProcessed
             $condition = $rule->condition;
             $operator = $rule->operator;
         }
-        $metrics = $probeMetric->probe->metrics->where('metric_type_id', $probeMetric->metric_type_id)->sortBy('created_at');
+        $metrics = $probes->metrics->where('metric_type_id', $metricTypes->id)->sortBy('created_at');
         $diff_per_sec = 0;
         $quantity = 0;
         foreach ($metrics as $metric) {
             $quantity = $metrics->count();
             $firstMetric = $metric;
-            $nextMetric = $probeMetric::where('id', '>', $metric->id)
-                ->where('metric_type_id', $probeMetric->metric_type_id)
-                ->where('probe_id', $probeMetric->probe_id)
+            $nextMetric = ProbeMetrics::where('id', '>', $metric->id)
+                ->where('metric_type_id', $metricTypes->id)
+                ->where('probe_id', $probes->id)
                 ->orderBy('id', 'asc')
                 ->first();
             if ($nextMetric !== null) {
@@ -42,6 +44,8 @@ class CalculatProcessed
             }
         }
         if ($quantity > 1) {
+            $time_to_condition = 0;
+            $probeMetric = $metrics->last();
             //echo "The average rate of change is: " . $diff_per_sec / $quantity;
 
             switch ($operator) {

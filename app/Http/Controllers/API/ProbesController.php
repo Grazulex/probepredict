@@ -14,7 +14,7 @@ class ProbesController extends BaseController
 {
     public function index(): JsonResponse
     {
-        $probes = Probes::where('team_id', auth()->user()->currentTeam->id)->get();
+        $probes = Probes::sameTeam()->get();
 
         return $this->sendResponse(ProbeResource::collection($probes), 'Probes retrieved successfully.');
     }
@@ -41,7 +41,7 @@ class ProbesController extends BaseController
 
     public function show(int $id): JsonResponse
     {
-        $probes = Probes::where('team_id', auth()->user()->currentTeam->id)->find($id);
+        $probes = Probes::sameTeam()->find($id);
 
         if (is_null($probes)) {
             return $this->sendError('Probe not found.');
@@ -52,7 +52,7 @@ class ProbesController extends BaseController
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $probes = Probes::where('team_id', auth()->user()->currentTeam->id)->find($id);
+        $probes = Probes::sameTeam()->find($id);
 
         if (is_null($probes)) {
             return $this->sendError('Probe not found.');
@@ -80,7 +80,7 @@ class ProbesController extends BaseController
 
     public function destroy(int $id): JsonResponse
     {
-        $probes = Probes::where('team_id', auth()->user()->currentTeam->id)->find($id);
+        $probes = Probes::sameTeam()->find($id);
 
         if (is_null($probes)) {
             return $this->sendError('Probe not found.');

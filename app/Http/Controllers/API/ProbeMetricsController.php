@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
-use App\Events\CalculatProcessed;
+use App\Events\CalculateProcessed;
 use App\Http\Resources\ProbeMetricResource;
 use App\Models\ProbeMetrics;
 use App\Models\Probes;
@@ -16,7 +16,7 @@ class ProbeMetricsController extends BaseController
 {
     public function index(int $id): JsonResponse
     {
-        $probe = Probes::where('team_id', auth()->user()->currentTeam->id)->find($id);
+        $probe = Probes::sameTeam()->find($id);
         if (is_null($probe)) {
             return $this->sendError('Probe not found.');
         }
@@ -40,13 +40,13 @@ class ProbeMetricsController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors(), 400);
         }
 
-        $probe = Probes::where('team_id', auth()->user()->currentTeam->id)->find($input['probe_id']);
+        $probe = Probes::sameTeam()->find($input['probe_id']);
         if (is_null($probe)) {
             return $this->sendError('Probe not found.');
         }
 
         $probeMetric = ProbeMetrics::create($input);
-        CalculatProcessed::dispatch($probeMetric);
+        CalculateProcessed::dispatch($probe, $probeMetric->metric_type);
 
         return $this->sendResponse(new ProbeMetricResource($probeMetric), 'Metric created successfully.', 201);
     }
@@ -54,7 +54,7 @@ class ProbeMetricsController extends BaseController
     public function destroy(int $id): JsonResponse
     {
         $metric = ProbeMetrics::find($id);
-        $probe = Probes::where('team_id', auth()->user()->currentTeam->id)->find($metric->probe_id);
+        $probe = Probes::sameTeam()->find($metric->probe_id);
 
         if (is_null($probe)) {
             return $this->sendError('Probe not found.');
@@ -64,7 +64,9 @@ class ProbeMetricsController extends BaseController
             return $this->sendError('Metric not found.');
         }
 
+        $old_metric_type = $metric->metric_type;
         $metric->delete();
+        CalculateProcessed::dispatch($probe, $old_metric_type);
 
         return $this->sendResponse([], 'Metric deleted successfully.', 204);
     }

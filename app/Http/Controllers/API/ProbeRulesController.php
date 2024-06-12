@@ -30,7 +30,7 @@ class ProbeRulesController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors(), 400);
         }
 
-        $probe = Probes::where('team_id', auth()->user()->currentTeam->id)->find($input['probe_id']);
+        $probe = Probes::sameTeam()->find($input['probe_id']);
         if (is_null($probe)) {
             return $this->sendError('Probe not found.');
         }
@@ -46,7 +46,7 @@ class ProbeRulesController extends BaseController
     public function update(Request $request, int $id)
     {
         $probeRule = ProbeRules::find($id);
-        $probe = Probes::where('team_id', auth()->user()->currentTeam->id)->find($probeRule->probe_id);
+        $probe = Probes::sameTeam()->find($probeRule->probe_id);
 
         if (is_null($probe)) {
             return $this->sendError('Probe not found.');
@@ -81,7 +81,7 @@ class ProbeRulesController extends BaseController
     public function destroy(int $id)
     {
         $rule = ProbeRules::find($id);
-        $probe = Probes::where('team_id', auth()->user()->currentTeam->id)->find($rule->probe_id);
+        $probe = Probes::sameTeam()->find($rule->probe_id);
 
         if (is_null($probe)) {
             return $this->sendError('Probe not found.');
