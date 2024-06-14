@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class MetricTypesController extends BaseController
+final class MetricTypesController extends BaseController
 {
     public function index(): JsonResponse
     {
@@ -39,7 +39,7 @@ class MetricTypesController extends BaseController
     {
         $metric_types = MetricTypes::find($id);
 
-        if (is_null($metric_types)) {
+        if (null === $metric_types) {
             return $this->sendError('Metric not found.');
         }
 
@@ -50,7 +50,7 @@ class MetricTypesController extends BaseController
     {
         $metric_types = MetricTypes::find($id);
 
-        if (is_null($metric_types)) {
+        if (null === $metric_types) {
             return $this->sendError('Metric not found.');
         }
 
@@ -78,7 +78,7 @@ class MetricTypesController extends BaseController
     {
         $metric_types = MetricTypes::find($id);
 
-        if (is_null($metric_types)) {
+        if (null === $metric_types) {
             return $this->sendError('Metric not found.');
         }
 

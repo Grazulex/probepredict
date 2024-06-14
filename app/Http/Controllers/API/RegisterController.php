@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class RegisterController extends BaseController
+final class RegisterController extends BaseController
 {
     public function register(Request $request): JsonResponse
     {
@@ -46,8 +46,8 @@ class RegisterController extends BaseController
             $success['name'] = $user->name;
 
             return $this->sendResponse($success, 'User login successfully.');
-        } else {
-            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
+        return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ProbeTypesController extends BaseController
+final class ProbeTypesController extends BaseController
 {
     public function index(): JsonResponse
     {
@@ -38,7 +38,7 @@ class ProbeTypesController extends BaseController
     {
         $probe_types = ProbeTypes::find($id);
 
-        if (is_null($probe_types)) {
+        if (null === $probe_types) {
             return $this->sendError('Probe not found.');
         }
 
@@ -49,7 +49,7 @@ class ProbeTypesController extends BaseController
     {
         $probe_types = ProbeTypes::find($id);
 
-        if (is_null($probe_types)) {
+        if (null === $probe_types) {
             return $this->sendError('Probe not found.');
         }
 
@@ -75,7 +75,7 @@ class ProbeTypesController extends BaseController
     {
         $probe_types = ProbeTypes::find($id);
 
-        if (is_null($probe_types)) {
+        if (null === $probe_types) {
             return $this->sendError('Probe not found.');
         }
 

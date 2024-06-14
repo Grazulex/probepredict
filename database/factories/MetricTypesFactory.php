@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\MetricTypes;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class MetricTypesFactory extends Factory
+final class MetricTypesFactory extends Factory
 {
     protected $model = MetricTypes::class;
 

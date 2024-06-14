@@ -7,7 +7,7 @@ namespace App\Strategies;
 use App\Models\MetricTypes;
 use App\Models\Probes;
 
-class BatteryStrategy implements CalculationStrategy
+final class BatteryStrategy implements CalculationStrategy
 {
     public function calculate(Probes $probes, MetricTypes $metricTypes): void
     {

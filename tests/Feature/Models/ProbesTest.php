@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Probes;
 use App\Models\User;
 
-it('retrieves probes correctly', function () {
+it('retrieves probes correctly', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     $response = $this->actingAs($user)->get('/api/probes');
     $response->assertStatus(200);
 });
 
-it('creates probe with valid data', function () {
+it('creates probe with valid data', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     $probeData = [
         'name' => 'Test Probe',
@@ -21,14 +23,14 @@ it('creates probe with valid data', function () {
     $this->assertDatabaseHas('probes', $probeData);
 });
 
-it('retrieves probe correctly by id', function () {
+it('retrieves probe correctly by id', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     $probe = Probes::factory()->create();
-    $response = $this->actingAs($user)->get('/api/probes/'.$probe->id);
+    $response = $this->actingAs($user)->get('/api/probes/' . $probe->id);
     $response->assertStatus(200);
 });
 
-it('updates probe with valid data', function () {
+it('updates probe with valid data', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     $probe = Probes::factory()->create();
 
@@ -37,20 +39,20 @@ it('updates probe with valid data', function () {
         'description' => 'This is an updated test probe',
     ];
 
-    $response = $this->actingAs($user)->put('/api/probes/'.$probe->id, $probeData);
+    $response = $this->actingAs($user)->put('/api/probes/' . $probe->id, $probeData);
     $response->assertStatus(200);
     $this->assertDatabaseHas('probes', $probeData);
 });
 
-it('deletes probe', function () {
+it('deletes probe', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     $probe = Probes::factory()->create();
-    $response = $this->actingAs($user)->delete('/api/probes/'.$probe->id);
+    $response = $this->actingAs($user)->delete('/api/probes/' . $probe->id);
     $response->assertStatus(200);
     $this->assertDatabaseMissing('probes', ['id' => $probe->id]);
 });
 
-it('fails to create probe with invalid data', function () {
+it('fails to create probe with invalid data', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     $probeData = [
         'name' => '',
@@ -62,7 +64,7 @@ it('fails to create probe with invalid data', function () {
     $response->assertStatus(400);
 });
 
-it('fails to update probe with invalid data', function () {
+it('fails to update probe with invalid data', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     $probe = Probes::factory()->create();
 
@@ -72,17 +74,17 @@ it('fails to update probe with invalid data', function () {
         'probe_type_id' => '',
     ];
 
-    $response = $this->actingAs($user)->put('/api/probes/'.$probe->id, $probeData);
+    $response = $this->actingAs($user)->put('/api/probes/' . $probe->id, $probeData);
     $response->assertStatus(400);
 });
 
-it('fails to retrieve probe with invalid id', function () {
+it('fails to retrieve probe with invalid id', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     $response = $this->actingAs($user)->get('/api/probes/9999');
     $response->assertStatus(404);
 });
 
-it('fails to delete probe with invalid id', function () {
+it('fails to delete probe with invalid id', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     $response = $this->actingAs($user)->delete('/api/probes/9999');
     $response->assertStatus(404);

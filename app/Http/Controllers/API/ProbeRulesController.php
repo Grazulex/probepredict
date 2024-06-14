@@ -10,7 +10,7 @@ use App\Models\Probes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ProbeRulesController extends BaseController
+final class ProbeRulesController extends BaseController
 {
     /**
      * Store a newly created resource in storage.
@@ -31,7 +31,7 @@ class ProbeRulesController extends BaseController
         }
 
         $probe = Probes::sameTeam()->find($input['probe_id']);
-        if (is_null($probe)) {
+        if (null === $probe) {
             return $this->sendError('Probe not found.');
         }
 
@@ -48,7 +48,7 @@ class ProbeRulesController extends BaseController
         $probeRule = ProbeRules::find($id);
         $probe = Probes::sameTeam()->find($probeRule->probe_id);
 
-        if (is_null($probe)) {
+        if (null === $probe) {
             return $this->sendError('Probe not found.');
         }
 
@@ -72,7 +72,7 @@ class ProbeRulesController extends BaseController
         $probeRule->save();
 
         return $this->sendResponse(new ProbeRuleResource($probeRule), 'Rule updated successfully.');
-        //
+
     }
 
     /**
@@ -83,11 +83,11 @@ class ProbeRulesController extends BaseController
         $rule = ProbeRules::find($id);
         $probe = Probes::sameTeam()->find($rule->probe_id);
 
-        if (is_null($probe)) {
+        if (null === $probe) {
             return $this->sendError('Probe not found.');
         }
 
-        if (is_null($rule)) {
+        if (null === $rule) {
             return $this->sendError('Rule not found.');
         }
 

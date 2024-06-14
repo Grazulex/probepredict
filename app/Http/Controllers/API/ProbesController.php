@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ProbesController extends BaseController
+final class ProbesController extends BaseController
 {
     public function index(): JsonResponse
     {
@@ -43,7 +43,7 @@ class ProbesController extends BaseController
     {
         $probes = Probes::sameTeam()->find($id);
 
-        if (is_null($probes)) {
+        if (null === $probes) {
             return $this->sendError('Probe not found.');
         }
 
@@ -54,7 +54,7 @@ class ProbesController extends BaseController
     {
         $probes = Probes::sameTeam()->find($id);
 
-        if (is_null($probes)) {
+        if (null === $probes) {
             return $this->sendError('Probe not found.');
         }
 
@@ -82,7 +82,7 @@ class ProbesController extends BaseController
     {
         $probes = Probes::sameTeam()->find($id);
 
-        if (is_null($probes)) {
+        if (null === $probes) {
             return $this->sendError('Probe not found.');
         }
 

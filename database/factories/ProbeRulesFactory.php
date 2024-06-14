@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\MetricTypes;
@@ -7,7 +9,7 @@ use App\Models\ProbeRules;
 use App\Models\Probes;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ProbeRulesFactory extends Factory
+final class ProbeRulesFactory extends Factory
 {
     protected $model = ProbeRules::class;
 

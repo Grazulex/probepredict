@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\API\MetricTypesController;
 use App\Http\Controllers\API\ProbeMetricsController;
 use App\Http\Controllers\API\ProbeRulesController;
@@ -10,16 +12,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(RegisterController::class)
     ->prefix('auth')
-    ->group(function () {
+    ->group(function (): void {
         Route::post('register', 'register');
         Route::post('login', 'login');
     });
 
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::group(['middleware' => ['role:admin']], function () {
+Route::group(['middleware' => ['auth:sanctum']], function (): void {
+    Route::group(['middleware' => ['role:admin']], function (): void {
         Route::controller(ProbeTypesController::class)
             ->prefix('probe-types')
-            ->group(function () {
+            ->group(function (): void {
                 Route::get('/{id}', 'show');
                 Route::put('/{id}', 'update');
                 Route::delete('/{id}', 'destroy');
@@ -28,7 +30,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         Route::controller(MetricTypesController::class)
             ->prefix('metric-types')
-            ->group(function () {
+            ->group(function (): void {
                 Route::get('/{id}', 'show');
                 Route::put('/{id}', 'update');
                 Route::delete('/{id}', 'destroy');
@@ -36,22 +38,22 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             });
     });
 
-    Route::group(['middleware' => ['role:user']], function () {
+    Route::group(['middleware' => ['role:user']], function (): void {
         Route::controller(ProbeTypesController::class)
             ->prefix('probe-types')
-            ->group(function () {
+            ->group(function (): void {
                 Route::get('/', 'index');
             });
 
         Route::controller(MetricTypesController::class)
             ->prefix('metric-types')
-            ->group(function () {
+            ->group(function (): void {
                 Route::get('/', 'index');
             });
 
         Route::controller(ProbesController::class)
             ->prefix('probes')
-            ->group(function () {
+            ->group(function (): void {
                 Route::get('/{id}', 'show');
                 Route::put('/{id}', 'update');
                 Route::delete('/{id}', 'destroy');
@@ -61,7 +63,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         Route::controller(ProbeMetricsController::class)
             ->prefix('metrics')
-            ->group(function () {
+            ->group(function (): void {
                 Route::get('/{id}', 'index');
                 Route::post('/', 'store');
                 Route::delete('/{id}', 'destroy');
@@ -69,7 +71,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         Route::controller(ProbeRulesController::class)
             ->prefix('rules')
-            ->group(function () {
+            ->group(function (): void {
                 Route::post('/', 'store');
                 Route::get('/{id}', 'update');
                 Route::delete('/{id}', 'destroy');

@@ -7,18 +7,11 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProbeResource extends JsonResource
+final class ProbeResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        $metrics = $this->metrics->groupBy('metric_type_id')->map(function ($metric) {
-            return $metric->sortByDesc('created_at')->first();
-        });
+        $metrics = $this->metrics->groupBy('metric_type_id')->map(fn($metric) => $metric->sortByDesc('created_at')->first());
 
         return [
             'id' => $this->id,
@@ -27,9 +20,7 @@ class ProbeResource extends JsonResource
             'probe_type' => new ProbeTypeResource($this->probeType),
             'created_at' => new DateTimeResource($this->created_at),
             'updated_at' => new DateTimeResource($this->updated_at),
-            'rules' => $this->when($request->route()->getPrefix() === 'api/probes', function () {
-                return ProbeRuleResource::collection($this->rules);
-            }),
+            'rules' => $this->when('api/probes' === $request->route()->getPrefix(), fn() => ProbeRuleResource::collection($this->rules)),
             'last_metrics' => ProbeMetricResource::collection($metrics),
         ];
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\ProbeTypeEnum;
@@ -10,8 +12,9 @@ use App\Strategies\EnvironmentalStrategy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use RuntimeException;
 
-class ProbeTypes extends Model
+final class ProbeTypes extends Model
 {
     use HasFactory;
 
@@ -40,7 +43,7 @@ class ProbeTypes extends Model
             ProbeTypeEnum::ENVIRONMENT => new EnvironmentalStrategy(),
             ProbeTypeEnum::CAR => new CarStrategy(),
             ProbeTypeEnum::BATTERY => new BatteryStrategy(),
-            default => throw new \RuntimeException('Unknown probe type'),
+            default => throw new RuntimeException('Unknown probe type'),
         };
     }
 }

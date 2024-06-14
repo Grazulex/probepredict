@@ -7,7 +7,7 @@ namespace App\Http\Resources\Collections;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class MetricType extends ResourceCollection
+final class MetricType extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
