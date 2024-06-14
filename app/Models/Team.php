@@ -4,12 +4,23 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
 
+/**
+ * Class Team
+ * @package App\Models
+ * @property int $id
+ * @property string $name
+ * @property bool $personal_team
+ * @property DateTime $created_at
+ * @property DateTime $updated_at
+ * @property Probes[] $probes
+ */
 final class Team extends JetstreamTeam
 {
     use HasFactory;

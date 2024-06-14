@@ -9,11 +9,23 @@ use App\Strategies\BatteryStrategy;
 use App\Strategies\CalculationStrategy;
 use App\Strategies\CarStrategy;
 use App\Strategies\EnvironmentalStrategy;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RuntimeException;
 
+/**
+ * Class ProbeTypes
+ * @package App\Models
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property ProbeTypeEnum $enum
+ * @property DateTime $created_at
+ * @property DateTime $updated_at
+ * @property Probes[] $probes
+ */
 final class ProbeTypes extends Model
 {
     use HasFactory;

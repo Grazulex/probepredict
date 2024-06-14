@@ -4,10 +4,23 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class ProbeMetrics
+ * @package App\Models
+ * @property int $id
+ * @property int $probe_id
+ * @property int $metric_type_id
+ * @property float $value
+ * @property DateTime $created_at
+ * @property DateTime $updated_at
+ * @property Probes $probe
+ * @property MetricTypes $metricType
+ */
 final class ProbeMetrics extends Model
 {
     use HasFactory;
