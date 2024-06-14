@@ -112,6 +112,23 @@ client.test("Status code is 201", function() {
 client.global.set("probe_id", response.body.data.id);
 %}
 ###
+PUT http://{{host}}/api/probes/{{probe_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+  "name": "{{$random.alphanumeric(15)}}",
+  "description": "blablabla2",
+  "probe_type_id": 1
+}
+
+> {%
+client.test("Status code is 200", function() {
+    client.assert(response.status === 200, "Expected 200 OK");
+});
+%}
+###
 GET http://{{host}}/api/probes HTTP/1.1
 accept: application/json
 content-type: application/json

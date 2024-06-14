@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Requests\DeleteProbeRequest;
+use App\Http\Requests\ShowProbeRequest;
+use App\Http\Requests\StoreProbeRequest;
+use App\Http\Requests\UpdateProbeRequest;
 use App\Http\Resources\ProbeResource;
 use App\Models\Probes;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 final class ProbesController extends BaseController
 {
@@ -16,78 +19,54 @@ final class ProbesController extends BaseController
     {
         $probes = Probes::sameTeam()->get();
 
-        return $this->sendResponse(ProbeResource::collection($probes), 'Probes retrieved successfully.');
+        return $this->sendResponse(
+            result: ProbeResource::collection($probes),
+            message: 'Probes retrieved successfully.',
+            status: Response::HTTP_OK,
+        );
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreProbeRequest $request): JsonResponse
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => ['required', 'string', 'max:255', 'unique:probes'],
-            'description' => 'required',
-            'probe_type_id' => 'required|exists:probe_types,id',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), 400);
-        }
-
+        $input = $request->validated();
         $input['team_id'] = $request->user()->currentTeam->id;
-
         $probe = Probes::create($input);
 
-        return $this->sendResponse(new ProbeResource($probe), 'Probe created successfully.', 201);
+        return $this->sendResponse(
+            result: new ProbeResource($probe),
+            message: 'created successfully.',
+            status: Response::HTTP_CREATED,
+        );
     }
 
-    public function show(int $id): JsonResponse
+    public function show(ShowProbeRequest $request, Probes $probe): JsonResponse
     {
-        $probes = Probes::sameTeam()->find($id);
-
-        if (null === $probes) {
-            return $this->sendError('Probe not found.');
-        }
-
-        return $this->sendResponse(new ProbeResource($probes), 'Probe retrieved successfully.');
+        return $this->sendResponse(
+            result: new ProbeResource($probe),
+            message: 'Probe retrieved successfully.',
+            status: Response::HTTP_OK,
+        );
     }
 
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdateProbeRequest $request, Probes $probe): JsonResponse
     {
-        $probes = Probes::sameTeam()->find($id);
+        $probe->update($request->validated());
 
-        if (null === $probes) {
-            return $this->sendError('Probe not found.');
-        }
-
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => ['required', 'string', 'max:255', 'unique:probes'],
-            'description' => 'required',
-            'probe_type_id' => 'required|exists:probe_types,id',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), 400);
-        }
-
-        $probes->name = $input['name'];
-        $probes->description = $input['description'];
-        $probes->probe_type_id = $input['probe_type_id'];
-        $probes->save();
-
-        return $this->sendResponse(new ProbeResource($probes), 'Probe updated successfully.');
+        return $this->sendResponse(
+            result:  new ProbeResource($probe),
+            message: 'Probe updated successfully.',
+            status: Response::HTTP_OK,
+        );
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(DeleteProbeRequest $request, Probes $probe): JsonResponse
     {
-        $probes = Probes::sameTeam()->find($id);
+        $probe->delete();
 
-        if (null === $probes) {
-            return $this->sendError('Probe not found.');
-        }
-
-        $probes->delete();
-
-        return $this->sendResponse([], 'Probe deleted successfully.', status: 204);
+        return $this->sendResponse(
+            result: [],
+            message: 'Probe deleted successfully.',
+            status: Response::HTTP_NO_CONTENT,
+        );
     }
 }

@@ -54,9 +54,9 @@ Route::group(['middleware' => ['auth:sanctum']], function (): void {
         Route::controller(ProbesController::class)
             ->prefix('probes')
             ->group(function (): void {
-                Route::get('/{id}', 'show');
-                Route::put('/{id}', 'update');
-                Route::delete('/{id}', 'destroy');
+                Route::get('/{probe}', 'show');
+                Route::put('/{probe}', 'update');
+                Route::delete('/{probe}', 'destroy');
                 Route::post('/', 'store');
                 Route::get('/', 'index');
             });

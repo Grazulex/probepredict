@@ -32,7 +32,7 @@ class BaseController extends Controller
         return response()->json($response, $status);
     }
 
-    public function sendError($error, $errorMessages = [], $status = 404): JsonResponse
+    public function sendError($error, $messages = [], $status = 404): JsonResponse
     {
         $response = [
             'data' => [],
@@ -51,8 +51,8 @@ class BaseController extends Controller
             ],
         ];
 
-        if ( ! empty($errorMessages)) {
-            $response['data'] = $errorMessages;
+        if ( ! empty($messages)) {
+            $response['data'] = $messages;
         }
 
         return response()->json($response, $status);
