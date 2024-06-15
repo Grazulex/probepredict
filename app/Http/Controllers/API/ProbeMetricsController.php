@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Actions\Metrics\CreateMetricsAction;
+use App\Actions\Metrics\DeleteMetricsAction;
 use App\Http\Requests\StoreProbeMetricRequest;
 use App\Http\Resources\ProbeMetricResource;
 use App\Models\ProbeMetrics;
@@ -12,11 +14,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ProbeMetricsController extends BaseController
 {
-    public function store(StoreProbeMetricRequest $request): JsonResponse
+    public function store(StoreProbeMetricRequest $request, CreateMetricsAction $action): JsonResponse
     {
-        $input = $request->validated();
-        $probeMetric = ProbeMetrics::create($input);
-        $probeMetric->probe->probeType->getCalculationStrategy()->calculate($probeMetric->probe, $probeMetric->metric_type);
+        $probeMetric = $action->handle(
+            input: $request->only(['probe_id','metric_type_id','value']),
+        );
 
         return $this->sendResponse(
             result: new ProbeMetricResource($probeMetric),
@@ -25,12 +27,11 @@ final class ProbeMetricsController extends BaseController
         );
     }
 
-    public function destroy(ProbeMetrics $probeMetrics): JsonResponse
+    public function destroy(ProbeMetrics $probeMetrics, DeleteMetricsAction $action): JsonResponse
     {
-        $metric_type = $probeMetrics->metric_type;
-        $probe = $probeMetrics->probe;
-        $probeMetrics->delete();
-        $probe->probeType->getCalculationStrategy()->calculate($probe, $metric_type);
+        $action->handle(
+            probeMetrics: $probeMetrics,
+        );
 
         return $this->sendResponse(
             result: [],

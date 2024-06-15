@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\API;
 
 use App\Actions\Probes\CreateProbesAction;
+use App\Actions\Probes\DeleteProbesAction;
 use App\Actions\Probes\UpdateProbesAction;
 use App\Http\Requests\StoreProbeRequest;
 use App\Http\Requests\UpdateProbeRequest;
@@ -63,9 +64,11 @@ final class ProbesController extends BaseController
         );
     }
 
-    public function destroy(Probes $probe): JsonResponse
+    public function destroy(Probes $probe, DeleteProbesAction $action): JsonResponse
     {
-        $probe->delete();
+        $action->handle(
+            probes: $probe,
+        );
 
         return $this->sendResponse(
             result: [],

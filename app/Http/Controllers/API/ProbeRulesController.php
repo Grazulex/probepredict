@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Actions\Rules\CreateRulesAction;
+use App\Actions\Rules\DeleteRulesAction;
+use App\Actions\Rules\UpdateRulesAction;
 use App\Http\Requests\StoreProbeRuleRequest;
 use App\Http\Requests\UpdateProbeRuleRequest;
 use App\Http\Resources\ProbeRuleResource;
@@ -13,10 +16,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ProbeRulesController extends BaseController
 {
-    public function store(StoreProbeRuleRequest $request): JsonResponse
+    public function store(StoreProbeRuleRequest $request, CreateRulesAction $action): JsonResponse
     {
-        $input = $request->validated();
-        $probeRule = ProbeRules::create($input);
+        $probeRule = $action->handle(
+            input: $request->only(['metric_type_id','probe_id','condition','operator']),
+        );
 
         return $this->sendResponse(
             result: new ProbeRuleResource($probeRule),
@@ -25,9 +29,12 @@ final class ProbeRulesController extends BaseController
         );
     }
 
-    public function update(UpdateProbeRuleRequest $request, ProbeRules $probeRules): JsonResponse
+    public function update(UpdateProbeRuleRequest $request, ProbeRules $probeRules, UpdateRulesAction $action): JsonResponse
     {
-        $probeRules->update($request->validated());
+        $probeRules = $action->handle(
+            input: $request->only(['operator','probe_id','condition','metric_type_id']),
+            probeRules: $probeRules,
+        );
 
         return $this->sendResponse(
             result: new ProbeRuleResource($probeRules),
@@ -36,9 +43,11 @@ final class ProbeRulesController extends BaseController
         );
     }
 
-    public function destroy(ProbeRules $probeRules): JsonResponse
+    public function destroy(ProbeRules $probeRules, DeleteRulesAction $action): JsonResponse
     {
-        $probeRules->delete();
+        $action->handle(
+            probeRules: $probeRules,
+        );
 
         return $this->sendResponse(
             result: [],
