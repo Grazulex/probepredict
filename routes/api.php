@@ -18,7 +18,7 @@ Route::controller(RegisterController::class)
     });
 
 Route::group(['middleware' => ['auth:sanctum']], function (): void {
-    Route::group(['middleware' => ['role:admin']], function (): void {
+    Route::group(['middleware' => ['can:administrator types']], function (): void {
         Route::controller(ProbeTypesController::class)
             ->prefix('probe-types')
             ->group(function (): void {
@@ -38,13 +38,15 @@ Route::group(['middleware' => ['auth:sanctum']], function (): void {
             });
     });
 
-    Route::group(['middleware' => ['role:user']], function (): void {
+    Route::group(['middleware' => ['can:list types']], function (): void {
         Route::controller(ProbeTypesController::class)
             ->prefix('probe-types')
             ->group(function (): void {
                 Route::get('/', 'index');
             });
+    });
 
+    Route::group(['middleware' => ['role:user']], function (): void {
         Route::controller(MetricTypesController::class)
             ->prefix('metric-types')
             ->group(function (): void {
@@ -75,6 +77,5 @@ Route::group(['middleware' => ['auth:sanctum']], function (): void {
                 Route::put('/{probeRules}', 'update');
                 Route::delete('/{probeRules}', 'destroy');
             });
-
     });
 });
