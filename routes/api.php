@@ -64,17 +64,16 @@ Route::group(['middleware' => ['auth:sanctum']], function (): void {
         Route::controller(ProbeMetricsController::class)
             ->prefix('metrics')
             ->group(function (): void {
-                Route::get('/{id}', 'index');
                 Route::post('/', 'store');
-                Route::delete('/{id}', 'destroy');
+                Route::delete('/{probeMetrics}', 'destroy');
             });
 
         Route::controller(ProbeRulesController::class)
             ->prefix('rules')
             ->group(function (): void {
                 Route::post('/', 'store');
-                Route::get('/{id}', 'update');
-                Route::delete('/{id}', 'destroy');
+                Route::put('/{probeRules}', 'update');
+                Route::delete('/{probeRules}', 'destroy');
             });
 
     });

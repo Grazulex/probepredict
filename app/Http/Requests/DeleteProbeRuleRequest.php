@@ -10,14 +10,14 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeleteProbeRequest extends FormRequest
+class DeleteProbeRuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->currentTeam->id === $this->probe->team_id;
+        return $this->user()->currentTeam->id === $this->probeRules->probe->team_id;
     }
 
     /**
@@ -36,7 +36,7 @@ class DeleteProbeRequest extends FormRequest
     {
         $base = new BaseController();
         $response = $base->sendError(
-            error: 'You are not authorized to delete this probe.',
+            error: 'You are not authorized to delete this rule.',
             status: Response::HTTP_UNAUTHORIZED,
         );
 

@@ -4,69 +4,39 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Requests\DeleteProbeMetricRequest;
+use App\Http\Requests\StoreProbeMetricRequest;
 use App\Http\Resources\ProbeMetricResource;
 use App\Models\ProbeMetrics;
-use App\Models\Probes;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 final class ProbeMetricsController extends BaseController
 {
-    public function index(int $id): JsonResponse
+    public function store(StoreProbeMetricRequest $request): JsonResponse
     {
-        $probe = Probes::sameTeam()->find($id);
-        if (null === $probe) {
-            return $this->sendError('Probe not found.');
-        }
-
-        $metrics = $probe->metrics;
-
-        return $this->sendResponse(ProbeMetricResource::collection($metrics), 'Metrics retrieved successfully.');
-    }
-
-    public function store(Request $request): JsonResponse
-    {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'probe_id' => ['required', 'exists:probes,id'],
-            'metric_type_id' => ['required', 'exists:metric_types,id'],
-            'value' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), 400);
-        }
-
-        $probe = Probes::sameTeam()->find($input['probe_id']);
-        if (null === $probe) {
-            return $this->sendError('Probe not found.');
-        }
-
+        $input = $request->validated();
         $probeMetric = ProbeMetrics::create($input);
-        $probe->probeType->getCalculationStrategy()->calculate($probe, $probeMetric->metric_type);
+        $probeMetric->probe->probeType->getCalculationStrategy()->calculate($probeMetric->probe, $probeMetric->metric_type);
 
-        return $this->sendResponse(new ProbeMetricResource($probeMetric), 'Metric created successfully.', 201);
+        return $this->sendResponse(
+            result: new ProbeMetricResource($probeMetric),
+            message: 'Metric created successfully.',
+            status: Response::HTTP_CREATED,
+        );
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(DeleteProbeMetricRequest $request, ProbeMetrics $probeMetrics): JsonResponse
     {
-        $metric = ProbeMetrics::find($id);
-        $probe = Probes::sameTeam()->find($metric->probe_id);
+        $metric_type = $probeMetrics->metric_type;
+        $probe = $probeMetrics->probe;
+        $probeMetrics->delete();
+        $probe->probeType->getCalculationStrategy()->calculate($probe, $metric_type);
 
-        if (null === $probe) {
-            return $this->sendError('Probe not found.');
-        }
-
-        if (null === $metric) {
-            return $this->sendError('Metric not found.');
-        }
-
-        $old_metric_type = $metric->metric_type;
-        $metric->delete();
-        $probe->probeType->getCalculationStrategy()->calculate($probe, $old_metric_type);
-
-        return $this->sendResponse([], 'Metric deleted successfully.', 204);
+        return $this->sendResponse(
+            result: [],
+            message: 'Metric deleted successfully.',
+            status: Response::HTTP_NO_CONTENT,
+        );
     }
 }

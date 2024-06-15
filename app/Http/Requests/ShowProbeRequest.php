@@ -34,7 +34,10 @@ class ShowProbeRequest extends FormRequest
     protected function failedAuthorization(): void
     {
         $base = new BaseController();
-        $response = $base->sendError('You are not authorized to show this probe.', [], Response::HTTP_UNAUTHORIZED);
+        $response = $base->sendError(
+            error: 'You are not authorized to show this probe.',
+            status: Response::HTTP_UNAUTHORIZED,
+        );
 
         throw new HttpResponseException($response);
     }

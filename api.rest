@@ -151,6 +151,43 @@ client.test("Status code is 200", function() {
 });
   %}
 ###
+POST http://{{host}}/api/rules HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+  "condition": "10",
+  "operator": "<",
+  "metric_type_id": {{metric_type_id}},
+  "probe_id": {{probe_id}}
+}
+
+> {%
+client.test("Status code is 201", function() {
+    client.assert(response.status === 201, "Expected 201 Created");
+});
+client.global.set("rule_id", response.body.data.id);
+%}
+###
+PUT http://{{host}}/api/rules/{{rule_id}} HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+  "condition": "20",
+  "operator": "<",
+  "metric_type_id": {{metric_type_id}},
+  "probe_id": {{probe_id}}
+}
+
+> {%
+client.test("Status code is 200", function() {
+    client.assert(response.status === 200, "Expected 200 OK");
+});
+%}
+###
 POST http://{{host}}/api/metrics HTTP/1.1
 accept: application/json
 content-type: application/json

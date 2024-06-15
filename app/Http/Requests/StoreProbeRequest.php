@@ -9,6 +9,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Symfony\Component\HttpFoundation\Response;
 
 class StoreProbeRequest extends FormRequest
 {
@@ -38,7 +39,11 @@ class StoreProbeRequest extends FormRequest
     {
         $errors = $validator->errors();
         $base = new BaseController();
-        $response = $base->sendError('Validation Error.', $errors, 422);
+        $response = $base->sendError(
+            error: 'Validation Error.',
+            messages: $errors,
+            status: Response::HTTP_UNPROCESSABLE_ENTITY,
+        );
 
         throw new HttpResponseException($response);
     }
