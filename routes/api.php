@@ -18,64 +18,48 @@ Route::controller(RegisterController::class)
     });
 
 Route::group(['middleware' => ['auth:sanctum']], function (): void {
-    Route::group(['middleware' => ['can:administrator types']], function (): void {
-        Route::controller(ProbeTypesController::class)
-            ->prefix('probe-types')
-            ->group(function (): void {
-                Route::get('/{id}', 'show');
-                Route::put('/{id}', 'update');
-                Route::delete('/{id}', 'destroy');
-                Route::post('/', 'store');
-            });
+    Route::controller(ProbeTypesController::class)
+        ->prefix('probe-types')
+        ->group(function (): void {
+            Route::get('/', 'index')->middleware('can:list types');
+            Route::get('/{id}', 'show')->middleware('can:list types');
+            Route::put('/{id}', 'update')->middleware('can:administrator types');
+            Route::delete('/{id}', 'destroy')->middleware('can:administrator types');
+            Route::post('/', 'store')->middleware('can:administrator types');
+        });
 
-        Route::controller(MetricTypesController::class)
-            ->prefix('metric-types')
-            ->group(function (): void {
-                Route::get('/{id}', 'show');
-                Route::put('/{id}', 'update');
-                Route::delete('/{id}', 'destroy');
-                Route::post('/', 'store');
-            });
-    });
+    Route::controller(MetricTypesController::class)
+        ->prefix('metric-types')
+        ->group(function (): void {
+            Route::get('/', 'index')->middleware('can:list types');
+            Route::get('/{id}', 'show')->middleware('can:list types');
+            Route::put('/{id}', 'update')->middleware('can:administrator types');
+            Route::delete('/{id}', 'destroy')->middleware('can:administrator types');
+            Route::post('/', 'store')->middleware('can:administrator types');
+        });
 
-    Route::group(['middleware' => ['can:list types']], function (): void {
-        Route::controller(ProbeTypesController::class)
-            ->prefix('probe-types')
-            ->group(function (): void {
-                Route::get('/', 'index');
-            });
-    });
+    Route::controller(ProbesController::class)
+        ->prefix('probes')
+        ->group(function (): void {
+            Route::get('/{probe}', 'show')->middleware(['can:list probes','verify.team']);
+            Route::put('/{probe}', 'update')->middleware(['can:create probes','verify.team']);
+            Route::delete('/{probe}', 'destroy')->middleware(['can:delete probes','verify.team']);
+            Route::post('/', 'store')->middleware(['can:create probes']);
+            Route::get('/', 'index')->middleware(['can:list probes']);
+        });
 
-    Route::group(['middleware' => ['role:user']], function (): void {
-        Route::controller(MetricTypesController::class)
-            ->prefix('metric-types')
-            ->group(function (): void {
-                Route::get('/', 'index');
-            });
+    Route::controller(ProbeMetricsController::class)
+        ->prefix('metrics')
+        ->group(function (): void {
+            Route::post('/', 'store')->middleware('can:create metrics');
+            Route::delete('/{probeMetrics}', 'destroy')->middleware('can:delete metrics');
+        });
 
-        Route::controller(ProbesController::class)
-            ->prefix('probes')
-            ->group(function (): void {
-                Route::get('/{probe}', 'show');
-                Route::put('/{probe}', 'update');
-                Route::delete('/{probe}', 'destroy');
-                Route::post('/', 'store');
-                Route::get('/', 'index');
-            });
-
-        Route::controller(ProbeMetricsController::class)
-            ->prefix('metrics')
-            ->group(function (): void {
-                Route::post('/', 'store');
-                Route::delete('/{probeMetrics}', 'destroy');
-            });
-
-        Route::controller(ProbeRulesController::class)
-            ->prefix('rules')
-            ->group(function (): void {
-                Route::post('/', 'store');
-                Route::put('/{probeRules}', 'update');
-                Route::delete('/{probeRules}', 'destroy');
-            });
-    });
+    Route::controller(ProbeRulesController::class)
+        ->prefix('rules')
+        ->group(function (): void {
+            Route::post('/', 'store')->middleware('can:create rules');
+            Route::put('/{probeRules}', 'update')->middleware('can:create rules');
+            Route::delete('/{probeRules}', 'destroy')->middleware('can:delete rules');
+        });
 });

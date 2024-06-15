@@ -43,30 +43,44 @@ final class DatabaseSeeder extends Seeder
         $list_probes = Permission::create(['name' => 'list probes']);
         $delete_probes = Permission::create(['name' => 'delete probes']);
 
+        $create_metrics = Permission::create(['name' => 'create metrics']);
+        $delete_metrics = Permission::create(['name' => 'delete metrics']);
+
+        $create_rules = Permission::create(['name' => 'create rules']);
+        $delete_rules = Permission::create(['name' => 'delete rules']);
+
         $role_admin->givePermissionTo($admin_types);
         $role_admin->givePermissionTo($list_types);
         $role_admin->givePermissionTo($create_probes);
         $role_admin->givePermissionTo($list_probes);
         $role_admin->givePermissionTo($delete_probes);
+        $role_admin->givePermissionTo($create_metrics);
+        $role_admin->givePermissionTo($delete_metrics);
 
         $role_user->givePermissionTo($list_types);
         $role_user->givePermissionTo($list_probes);
         $role_user->givePermissionTo($create_probes);
         $role_user->givePermissionTo($delete_probes);
+        $role_user->givePermissionTo($create_metrics);
+        $role_user->givePermissionTo($delete_metrics);
 
         $admin_types->assignRole($role_admin);
         $list_types->assignRole($role_admin);
         $create_probes->assignRole($role_admin);
         $list_probes->assignRole($role_admin);
         $delete_probes->assignRole($role_admin);
+        $create_metrics->assignRole($role_admin);
+        $delete_metrics->assignRole($role_admin);
 
         $list_types->assignRole($role_user);
         $create_probes->assignRole($role_user);
         $list_probes->assignRole($role_user);
         $delete_probes->assignRole($role_user);
+        $create_metrics->assignRole($role_user);
+        $delete_metrics->assignRole($role_user);
 
         $user->assignRole(['administrator', 'user']);
-        $user->givePermissionTo(['administrator types', 'list types', 'create probes', 'list probes', 'delete probes']);
+        $user->givePermissionTo(['administrator types', 'list types', 'create probes', 'list probes', 'delete probes', 'create metrics', 'delete metrics', 'create rules', 'delete rules']);
 
         ProbeTypes::factory()->create([
             'name' => 'Environmental',
