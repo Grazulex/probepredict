@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Actions\Probes\CreateProbesAction;
+use App\Actions\Probes\UpdateProbesAction;
 use App\Http\Requests\StoreProbeRequest;
 use App\Http\Requests\UpdateProbeRequest;
 use App\Http\Resources\ProbeResource;
@@ -24,11 +26,12 @@ final class ProbesController extends BaseController
         );
     }
 
-    public function store(StoreProbeRequest $request): JsonResponse
+    public function store(StoreProbeRequest $request, CreateProbesAction $action): JsonResponse
     {
-        $input = $request->validated();
-        $input['team_id'] = $request->user()->currentTeam->id;
-        $probe = Probes::create($input);
+        $probe = $action->handle(
+            input: $request->only(['name', 'description', 'probe_type_id']),
+            user: $request->user(),
+        );
 
         return $this->sendResponse(
             result: new ProbeResource($probe),
@@ -46,9 +49,12 @@ final class ProbesController extends BaseController
         );
     }
 
-    public function update(UpdateProbeRequest $request, Probes $probe): JsonResponse
+    public function update(UpdateProbeRequest $request, Probes $probe, UpdateProbesAction $action): JsonResponse
     {
-        $probe->update($request->validated());
+        $probe = $action->handle(
+            input: $request->only(['name', 'description', 'probe_type_id']),
+            probes: $probe,
+        );
 
         return $this->sendResponse(
             result:  new ProbeResource($probe),

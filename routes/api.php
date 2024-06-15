@@ -52,14 +52,14 @@ Route::group(['middleware' => ['auth:sanctum']], function (): void {
         ->prefix('metrics')
         ->group(function (): void {
             Route::post('/', 'store')->middleware('can:create metrics');
-            Route::delete('/{probeMetrics}', 'destroy')->middleware('can:delete metrics');
+            Route::delete('/{probeMetrics}', 'destroy')->middleware('can:delete metrics'); //need to add verify.team of probe middleware
         });
 
     Route::controller(ProbeRulesController::class)
         ->prefix('rules')
         ->group(function (): void {
             Route::post('/', 'store')->middleware('can:create rules');
-            Route::put('/{probeRules}', 'update')->middleware('can:create rules');
-            Route::delete('/{probeRules}', 'destroy')->middleware('can:delete rules');
+            Route::put('/{probeRules}', 'update')->middleware('can:create rules'); //need to add verify.team middleware
+            Route::delete('/{probeRules}', 'destroy')->middleware('can:delete rules'); //need to add verify.team of probe middleware
         });
 });

@@ -10,6 +10,7 @@ use App\Models\ProbeTypes;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -25,7 +26,7 @@ final class DatabaseSeeder extends Seeder
         $user = User::factory()->withPersonalTeam()->create([
             'name' => 'administrator',
             'email' => 'jms@grazulex.be',
-            'password' => bcrypt('password'),
+            'password' => Hash::make('password'),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -56,6 +57,8 @@ final class DatabaseSeeder extends Seeder
         $role_admin->givePermissionTo($delete_probes);
         $role_admin->givePermissionTo($create_metrics);
         $role_admin->givePermissionTo($delete_metrics);
+        $role_admin->givePermissionTo($create_rules);
+        $role_admin->givePermissionTo($delete_rules);
 
         $role_user->givePermissionTo($list_types);
         $role_user->givePermissionTo($list_probes);
@@ -63,6 +66,8 @@ final class DatabaseSeeder extends Seeder
         $role_user->givePermissionTo($delete_probes);
         $role_user->givePermissionTo($create_metrics);
         $role_user->givePermissionTo($delete_metrics);
+        $role_user->givePermissionTo($create_rules);
+        $role_user->givePermissionTo($delete_rules);
 
         $admin_types->assignRole($role_admin);
         $list_types->assignRole($role_admin);
@@ -71,6 +76,8 @@ final class DatabaseSeeder extends Seeder
         $delete_probes->assignRole($role_admin);
         $create_metrics->assignRole($role_admin);
         $delete_metrics->assignRole($role_admin);
+        $create_rules->assignRole($role_admin);
+        $delete_rules->assignRole($role_admin);
 
         $list_types->assignRole($role_user);
         $create_probes->assignRole($role_user);
@@ -78,6 +85,8 @@ final class DatabaseSeeder extends Seeder
         $delete_probes->assignRole($role_user);
         $create_metrics->assignRole($role_user);
         $delete_metrics->assignRole($role_user);
+        $create_rules->assignRole($role_user);
+        $delete_rules->assignRole($role_user);
 
         $user->assignRole(['administrator', 'user']);
         $user->givePermissionTo(['administrator types', 'list types', 'create probes', 'list probes', 'delete probes', 'create metrics', 'delete metrics', 'create rules', 'delete rules']);

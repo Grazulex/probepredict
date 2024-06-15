@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\DeleteProbeRuleRequest;
 use App\Http\Requests\StoreProbeRuleRequest;
 use App\Http\Requests\UpdateProbeRuleRequest;
 use App\Http\Resources\ProbeRuleResource;
@@ -37,7 +36,7 @@ final class ProbeRulesController extends BaseController
         );
     }
 
-    public function destroy(DeleteProbeRuleRequest $request, ProbeRules $probeRules): JsonResponse
+    public function destroy(ProbeRules $probeRules): JsonResponse
     {
         $probeRules->delete();
 

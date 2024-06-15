@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\DeleteProbeMetricRequest;
 use App\Http\Requests\StoreProbeMetricRequest;
 use App\Http\Resources\ProbeMetricResource;
 use App\Models\ProbeMetrics;
@@ -26,7 +25,7 @@ final class ProbeMetricsController extends BaseController
         );
     }
 
-    public function destroy(DeleteProbeMetricRequest $request, ProbeMetrics $probeMetrics): JsonResponse
+    public function destroy(ProbeMetrics $probeMetrics): JsonResponse
     {
         $metric_type = $probeMetrics->metric_type;
         $probe = $probeMetrics->probe;

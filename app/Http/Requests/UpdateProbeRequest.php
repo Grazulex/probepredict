@@ -39,15 +39,4 @@ class UpdateProbeRequest extends FormRequest
 
         throw new HttpResponseException($response);
     }
-
-    protected function failedAuthorization(): void
-    {
-        $base = new BaseController();
-        $response = $base->sendError(
-            error: 'You are not authorized to update this probe.',
-            status: Response::HTTP_UNAUTHORIZED,
-        );
-
-        throw new HttpResponseException($response);
-    }
 }
