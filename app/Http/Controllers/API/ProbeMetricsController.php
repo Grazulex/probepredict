@@ -14,9 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ProbeMetricsController extends BaseController
 {
-    public function store(StoreProbeMetricRequest $request, CreateMetricsAction $action): JsonResponse
+    public function store(StoreProbeMetricRequest $request, CreateMetricsAction $createMetricsAction): JsonResponse
     {
-        $probeMetric = $action->handle(
+        $probeMetric = $createMetricsAction->handle(
             input: $request->only(['probe_id','metric_type_id','value']),
         );
 
@@ -27,9 +27,9 @@ final class ProbeMetricsController extends BaseController
         );
     }
 
-    public function destroy(ProbeMetrics $probeMetrics, DeleteMetricsAction $action): JsonResponse
+    public function destroy(ProbeMetrics $probeMetrics, DeleteMetricsAction $deleteMetricsAction): JsonResponse
     {
-        $action->handle(
+        $deleteMetricsAction->handle(
             probeMetrics: $probeMetrics,
         );
 

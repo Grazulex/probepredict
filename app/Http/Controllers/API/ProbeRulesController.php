@@ -16,9 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ProbeRulesController extends BaseController
 {
-    public function store(StoreProbeRuleRequest $request, CreateRulesAction $action): JsonResponse
+    public function store(StoreProbeRuleRequest $request, CreateRulesAction $createRulesAction): JsonResponse
     {
-        $probeRule = $action->handle(
+        $probeRule = $createRulesAction->handle(
             input: $request->only(['metric_type_id','probe_id','condition','operator']),
         );
 
@@ -29,9 +29,9 @@ final class ProbeRulesController extends BaseController
         );
     }
 
-    public function update(UpdateProbeRuleRequest $request, ProbeRules $probeRules, UpdateRulesAction $action): JsonResponse
+    public function update(UpdateProbeRuleRequest $request, ProbeRules $probeRules, UpdateRulesAction $updateRulesAction): JsonResponse
     {
-        $probeRules = $action->handle(
+        $probeRules = $updateRulesAction->handle(
             input: $request->only(['operator','probe_id','condition','metric_type_id']),
             probeRules: $probeRules,
         );
@@ -43,9 +43,9 @@ final class ProbeRulesController extends BaseController
         );
     }
 
-    public function destroy(ProbeRules $probeRules, DeleteRulesAction $action): JsonResponse
+    public function destroy(ProbeRules $probeRules, DeleteRulesAction $deleteRulesAction): JsonResponse
     {
-        $action->handle(
+        $deleteRulesAction->handle(
             probeRules: $probeRules,
         );
 

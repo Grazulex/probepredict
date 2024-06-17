@@ -4,18 +4,27 @@ declare(strict_types=1);
 
 namespace App\Actions\Metrics;
 
+use App\Actions\Probes\UpdateOnGoingProbesAction;
+use App\Jobs\CalculateJob;
 use App\Models\ProbeMetrics;
 
 class CreateMetricsAction
 {
+    public function __construct(protected UpdateOnGoingProbesAction $updateOnGoingProbesAction) {}
     public function handle(array $input): ProbeMetrics
     {
         $probeMetric = ProbeMetrics::create($input);
 
-        $probeMetric->probe->stats_ongoing = $probeMetric->probe->stats_ongoing + 1;
-        $probeMetric->probe->save();
+        $this->updateOnGoingProbesAction->handle(
+            isAdding: true,
+            probes: $probeMetric->probe,
+        );
 
-        $probeMetric->probe->probeType->getCalculationStrategy()->calculate($probeMetric->probe, $probeMetric->metric_type);
+        CalculateJob::dispatch(
+            probe : $probeMetric->probe,
+            probe_type : $probeMetric->probe->probeType,
+            metric_type: $probeMetric->metric_type,
+        );
 
         return $probeMetric;
 

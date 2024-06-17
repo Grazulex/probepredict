@@ -31,9 +31,9 @@ final class ProbesController extends BaseController
         );
     }
 
-    public function store(StoreProbeRequest $request, CreateProbesAction $action): JsonResponse
+    public function store(StoreProbeRequest $request, CreateProbesAction $createProbesAction): JsonResponse
     {
-        $probe = $action->handle(
+        $probe = $createProbesAction->handle(
             input: $request->only(['name', 'description', 'probe_type_id']),
             user: $request->user(),
         );
@@ -54,9 +54,9 @@ final class ProbesController extends BaseController
         );
     }
 
-    public function update(UpdateProbeRequest $request, Probes $probe, UpdateProbesAction $action): JsonResponse
+    public function update(UpdateProbeRequest $request, Probes $probe, UpdateProbesAction $updateProbesAction): JsonResponse
     {
-        $probe = $action->handle(
+        $probe = $updateProbesAction->handle(
             input: $request->only(['name', 'description', 'probe_type_id']),
             probes: $probe,
         );
@@ -68,9 +68,9 @@ final class ProbesController extends BaseController
         );
     }
 
-    public function destroy(Probes $probe, DeleteProbesAction $action): JsonResponse
+    public function destroy(Probes $probe, DeleteProbesAction $deleteProbesAction): JsonResponse
     {
-        $action->handle(
+        $deleteProbesAction->handle(
             probes: $probe,
         );
 
