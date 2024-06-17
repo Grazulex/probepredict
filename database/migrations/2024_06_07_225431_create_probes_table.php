@@ -18,6 +18,7 @@ return new class () extends Migration {
             $table->foreignId('probe_type_id')->constrained();
             $table->string('name');
             $table->string('description');
+            $table->integer('stats_ongoing')->default(0);
             $table->timestamps();
 
             $table->unique(['team_id', 'name']);

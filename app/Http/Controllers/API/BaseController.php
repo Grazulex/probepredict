@@ -7,41 +7,52 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller as Controller;
 use App\Http\Resources\DateTimeResource;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class BaseController extends Controller
 {
-    public function sendResponse($result, $message, $status = 200): JsonResponse
+    public function sendResponse($result, $message, $status = Response::HTTP_OK, $paginator = false): JsonResponse
     {
-        $response = [
-            'data' => $result,
-            'status' => [
-                'message' => $message,
-                'code' => $status,
-            ],
-            'links' => [
-                'self' => 'link-value',
-            ],
-            'requested_by' => [
-                'name' => request()->user()->name,
-                'roles' => request()->user()->getRoleNames(),
-                'team' => request()->user()->currentTeam->name,
-                'at' => new DateTimeResource(now()),
-            ],
+        if ($paginator) {
+            $response = [
+                'data' => $result->items(),
+                'pagination' => [
+                    'current_page' => $result->currentPage(),
+                    'last_page' => $result->lastPage(),
+                    'per_page' => $result->perPage(),
+                    'total' => $result->total(),
+                    'next_page_url' => $result->nextPageUrl(),
+                    'prev_page_url' => $result->previousPageUrl(),
+                ],
+            ];
+        } else {
+            $response = [
+                'data' => $result,
+            ];
+        }
+
+        $response['status'] = [
+            'message' => $message,
+            'code' => $status,
+        ];
+
+        $response['requested_by'] = [
+            'name' => request()->user()->name,
+            'roles' => request()->user()->getRoleNames(),
+            'team' => request()->user()->currentTeam->name,
+            'at' => new DateTimeResource(now()),
         ];
 
         return response()->json($response, $status);
     }
 
-    public function sendError($error, $messages = [], $status = 404): JsonResponse
+    public function sendError($error, $messages = [], $status = Response::HTTP_BAD_REQUEST): JsonResponse
     {
         $response = [
             'data' => [],
             'status' => [
                 'message' => $error,
                 'code' => $status,
-            ],
-            'links' => [
-                'self' => 'link-value',
             ],
             'requested_by' => [
                 'name' => request()->user()->name,

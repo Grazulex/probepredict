@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Resources\ProbeTypeResource;
+use App\Http\Resources\Collections\ProbeTypesCollection;
+use App\Http\Resources\ProbeTypesResource;
 use App\Models\ProbeTypes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,10 @@ final class ProbeTypesController extends BaseController
 {
     public function index(): JsonResponse
     {
-        return $this->sendResponse(ProbeTypeResource::collection(ProbeTypes::all()), 'Probe Types retrieved successfully.');
+        return $this->sendResponse(
+            result: new ProbeTypesCollection(ProbeTypes::all()),
+            message: 'Probe Types retrieved successfully.',
+        );
     }
 
     public function store(Request $request): JsonResponse
@@ -31,7 +35,7 @@ final class ProbeTypesController extends BaseController
 
         $probe_types = ProbeTypes::create($input);
 
-        return $this->sendResponse(new ProbeTypeResource($probe_types), 'Probe Type created successfully.', 201);
+        return $this->sendResponse(new ProbeTypesResource($probe_types), 'Probe Type created successfully.', 201);
     }
 
     public function show(int $id): JsonResponse
@@ -42,7 +46,7 @@ final class ProbeTypesController extends BaseController
             return $this->sendError('Probe not found.');
         }
 
-        return $this->sendResponse(new ProbeTypeResource($probe_types), 'Probe Type retrieved successfully.');
+        return $this->sendResponse(new ProbeTypesResource($probe_types), 'Probe Type retrieved successfully.');
     }
 
     public function update(Request $request, int $id): JsonResponse
@@ -68,7 +72,7 @@ final class ProbeTypesController extends BaseController
         $probe_types->description = $input['description'];
         $probe_types->save();
 
-        return $this->sendResponse(new ProbeTypeResource($probe_types), 'Probe Type updated successfully.');
+        return $this->sendResponse(new ProbeTypesResource($probe_types), 'Probe Type updated successfully.');
     }
 
     public function destroy(int $id): JsonResponse

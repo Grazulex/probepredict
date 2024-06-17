@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Resources\MetricTypeResource;
+use App\Http\Resources\Collections\MetricTypesCollection;
+use App\Http\Resources\MetricTypesResource;
 use App\Models\MetricTypes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,10 @@ final class MetricTypesController extends BaseController
 {
     public function index(): JsonResponse
     {
-        return $this->sendResponse(MetricTypeResource::collection(MetricTypes::all()), 'Metric Types retrieved successfully.');
+        return $this->sendResponse(
+            result: new MetricTypesCollection(MetricTypes::all()),
+            message: 'Metric Types retrieved successfully.',
+        );
     }
 
     public function store(Request $request): JsonResponse
@@ -32,7 +36,7 @@ final class MetricTypesController extends BaseController
 
         $metric_types = MetricTypes::create($input);
 
-        return $this->sendResponse(new MetricTypeResource($metric_types), 'Metric Type created successfully.', 201);
+        return $this->sendResponse(new MetricTypesResource($metric_types), 'Metric Type created successfully.', 201);
     }
 
     public function show(int $id): JsonResponse
@@ -43,7 +47,7 @@ final class MetricTypesController extends BaseController
             return $this->sendError('Metric not found.');
         }
 
-        return $this->sendResponse(new MetricTypeResource($metric_types), 'Metric Type retrieved successfully.');
+        return $this->sendResponse(new MetricTypesResource($metric_types), 'Metric Type retrieved successfully.');
     }
 
     public function update(Request $request, int $id): JsonResponse
@@ -71,7 +75,7 @@ final class MetricTypesController extends BaseController
         $metric_types->unit = $input['unit'];
         $metric_types->save();
 
-        return $this->sendResponse(new MetricTypeResource($metric_types), 'Metric Type updated successfully.');
+        return $this->sendResponse(new MetricTypesResource($metric_types), 'Metric Type updated successfully.');
     }
 
     public function destroy(int $id): JsonResponse

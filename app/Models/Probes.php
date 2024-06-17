@@ -13,18 +13,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Probes
+ *
  * @package App\Models
  * @property int $id
  * @property int $team_id
  * @property int $probe_type_id
  * @property string $name
  * @property string $description
+ * @property int $stats_ongoing
  * @property DateTime $created_at
  * @property DateTime $updated_at
- * @property Team $team
- * @property ProbeTypes $probeType
- * @property ProbeMetrics[] $metrics
- * @property ProbeRules[] $rules
+ * @property-read Team $team
+ * @property-read ProbeTypes $probeType
+ * @property-read ProbeMetrics[] $metrics
+ * @property-read ProbeRules[] $rules
  * @method static Builder sameTeam()
  */
 final class Probes extends Model
@@ -36,28 +38,44 @@ final class Probes extends Model
         'probe_type_id',
         'name',
         'description',
+        'stats_ongoing',
     ];
 
+    /**
+     * @return BelongsTo
+     */
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function probeType(): BelongsTo
     {
         return $this->belongsTo(ProbeTypes::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function metrics(): HasMany
     {
         return $this->hasMany(ProbeMetrics::class, 'probe_id');
     }
 
+    /**
+     * @return HasMany
+     */
     public function rules(): HasMany
     {
         return $this->hasMany(ProbeRules::class, 'probe_id');
     }
 
+    /**
+     * @param Builder $query
+     */
     public function scopeSameTeam(Builder $query): void
     {
         $query->where('team_id', auth()->user()->currentTeam->id);

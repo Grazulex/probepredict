@@ -6,10 +6,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\User;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 final class RegisterController extends BaseController
 {
@@ -23,7 +25,13 @@ final class RegisterController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            throw new HttpResponseException(
+                $this->sendError(
+                    error: 'Validation Error.',
+                    messages: $validator->errors(),
+                    status: Response::HTTP_BAD_REQUEST,
+                ),
+            );
         }
 
         $input = $request->all();
@@ -47,7 +55,12 @@ final class RegisterController extends BaseController
 
             return $this->sendResponse($success, 'User login successfully.');
         }
-        return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
-
+        throw new HttpResponseException(
+            $this->sendError(
+                error: 'Unauthorised.',
+                messages: ['error' => 'Unauthorised'],
+                status: Response::HTTP_UNAUTHORIZED,
+            ),
+        );
     }
 }

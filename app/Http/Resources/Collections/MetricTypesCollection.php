@@ -7,7 +7,7 @@ namespace App\Http\Resources\Collections;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-final class ProbeMetric extends ResourceCollection
+final class MetricTypesCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -18,9 +18,6 @@ final class ProbeMetric extends ResourceCollection
     {
         return [
             'data' => $this->collection,
-            'links' => [
-                'self' => 'link-value',
-            ],
         ];
     }
 }

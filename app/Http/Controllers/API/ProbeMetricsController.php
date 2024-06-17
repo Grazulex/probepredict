@@ -7,7 +7,7 @@ namespace App\Http\Controllers\API;
 use App\Actions\Metrics\CreateMetricsAction;
 use App\Actions\Metrics\DeleteMetricsAction;
 use App\Http\Requests\StoreProbeMetricRequest;
-use App\Http\Resources\ProbeMetricResource;
+use App\Http\Resources\ProbeMetricsResource;
 use App\Models\ProbeMetrics;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +21,7 @@ final class ProbeMetricsController extends BaseController
         );
 
         return $this->sendResponse(
-            result: new ProbeMetricResource($probeMetric),
+            result: new ProbeMetricsResource($probeMetric),
             message: 'Metric created successfully.',
             status: Response::HTTP_CREATED,
         );

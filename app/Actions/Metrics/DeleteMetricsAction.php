@@ -13,6 +13,9 @@ class DeleteMetricsAction
         $metric_type = $probeMetrics->metric_type;
         $probe = $probeMetrics->probe;
         $probeMetrics->delete();
+        $probe->stats_ongoing = $probe->stats_ongoing + 1;
+        $probe->save();
+
         $probe->probeType->getCalculationStrategy()->calculate($probe, $metric_type);
     }
 }

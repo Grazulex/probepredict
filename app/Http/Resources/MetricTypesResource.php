@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Models\MetricTypes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-final class ProbeMetricResource extends JsonResource
+/** @mixin MetricTypes */
+final class MetricTypesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +20,9 @@ final class ProbeMetricResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'metric_type' => new MetricTypeResource($this->metric_type),
-            'value' => $this->value,
-            'created_at' => new DateTimeResource($this->created_at),
+            'name' => $this->name,
+            'description' => $this->description,
+            'unit' => $this->unit,
         ];
     }
 }

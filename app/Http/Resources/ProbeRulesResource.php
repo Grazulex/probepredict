@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Models\ProbeRules;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-final class ProbeRuleResource extends JsonResource
+/** @mixin ProbeRules */
+final class ProbeRulesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,8 +20,8 @@ final class ProbeRuleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'probe' => $this->when('api/probes' !== $request->route()->getPrefix(), fn() => new ProbeResource($this->probe)),
-            'metric_type_id' => new MetricTypeResource($this->metric_type),
+            'probe' => $this->when('api/probes' !== $request->route()->getPrefix(), fn() => new ProbesResource($this->probe)),
+            'metric_type_id' => new MetricTypesResource($this->metric_type),
             'operator' => $this->operator,
             'condition' => $this->condition,
             'estimation' => new DateTimeResource($this->estimation),

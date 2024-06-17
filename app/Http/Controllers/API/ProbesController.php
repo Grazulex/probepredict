@@ -9,21 +9,25 @@ use App\Actions\Probes\DeleteProbesAction;
 use App\Actions\Probes\UpdateProbesAction;
 use App\Http\Requests\StoreProbeRequest;
 use App\Http\Requests\UpdateProbeRequest;
-use App\Http\Resources\ProbeResource;
+use App\Http\Resources\Collections\ProbesCollection;
+use App\Http\Resources\ProbesResource;
 use App\Models\Probes;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ProbesController extends BaseController
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $probes = Probes::sameTeam()->get();
+        $size = $request->query('size', 5);
+        $probes = Probes::sameTeam()->paginate($size);
 
         return $this->sendResponse(
-            result: ProbeResource::collection($probes),
+            result: new ProbesCollection($probes),
             message: 'Probes retrieved successfully.',
             status: Response::HTTP_OK,
+            paginator: true,
         );
     }
 
@@ -35,7 +39,7 @@ final class ProbesController extends BaseController
         );
 
         return $this->sendResponse(
-            result: new ProbeResource($probe),
+            result: new ProbesResource($probe),
             message: 'created successfully.',
             status: Response::HTTP_CREATED,
         );
@@ -44,7 +48,7 @@ final class ProbesController extends BaseController
     public function show(Probes $probe): JsonResponse
     {
         return $this->sendResponse(
-            result: new ProbeResource($probe),
+            result: new ProbesResource($probe),
             message: 'Probe retrieved successfully.',
             status: Response::HTTP_OK,
         );
@@ -58,7 +62,7 @@ final class ProbesController extends BaseController
         );
 
         return $this->sendResponse(
-            result:  new ProbeResource($probe),
+            result:  new ProbesResource($probe),
             message: 'Probe updated successfully.',
             status: Response::HTTP_OK,
         );

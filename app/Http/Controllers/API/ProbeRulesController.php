@@ -9,7 +9,7 @@ use App\Actions\Rules\DeleteRulesAction;
 use App\Actions\Rules\UpdateRulesAction;
 use App\Http\Requests\StoreProbeRuleRequest;
 use App\Http\Requests\UpdateProbeRuleRequest;
-use App\Http\Resources\ProbeRuleResource;
+use App\Http\Resources\ProbeRulesResource;
 use App\Models\ProbeRules;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ final class ProbeRulesController extends BaseController
         );
 
         return $this->sendResponse(
-            result: new ProbeRuleResource($probeRule),
+            result: new ProbeRulesResource($probeRule),
             message: 'Rule created successfully.',
             status: Response::HTTP_CREATED,
         );
@@ -37,7 +37,7 @@ final class ProbeRulesController extends BaseController
         );
 
         return $this->sendResponse(
-            result: new ProbeRuleResource($probeRules),
+            result: new ProbeRulesResource($probeRules),
             message: 'Rule updated successfully.',
             status: Response::HTTP_OK,
         );
