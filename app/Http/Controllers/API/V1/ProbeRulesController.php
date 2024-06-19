@@ -39,7 +39,6 @@ final class ProbeRulesController extends BaseController
         return $this->sendResponse(
             result: new ProbeRulesResource($probeRules),
             message: 'Rule updated successfully.',
-            status: Response::HTTP_OK,
         );
     }
 

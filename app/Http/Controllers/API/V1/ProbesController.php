@@ -20,13 +20,12 @@ final class ProbesController extends BaseController
 {
     public function index(Request $request): JsonResponse
     {
-        $size = $request->query('size', 5);
+        $size = (int) $request->query('size', 5);
         $probes = Probes::sameTeam()->paginate($size);
 
         return $this->sendResponse(
             result: new ProbesCollection($probes),
             message: 'Probes retrieved successfully.',
-            status: Response::HTTP_OK,
             paginator: true,
         );
     }
