@@ -2,28 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
-use App\Http\Controllers\API\BaseController;
-use Illuminate\Contracts\Validation\ValidationRule;
+use App\Http\Controllers\API\V1\BaseController;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpFoundation\Response;
 
-class UpdateProbeRequest extends FormRequest
+class StoreProbeRuleRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array|string>
-     */
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:probes'],
-            'description' => 'required',
-            'probe_type_id' => 'required|exists:probe_types,id',
+            'probe_id' => ['required', 'exists:probes,id,team_id,' . $this->user()->currentTeam->id],
+            'metric_type_id' => ['required', 'exists:metric_types,id'],
+            'operator' => ['required'],
+            'condition' => ['required'],
         ];
     }
 

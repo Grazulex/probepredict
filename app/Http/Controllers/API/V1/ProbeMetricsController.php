@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\V1;
 
 use App\Actions\Metrics\CreateMetricsAction;
 use App\Actions\Metrics\DeleteMetricsAction;
-use App\Http\Requests\StoreProbeMetricRequest;
-use App\Http\Resources\ProbeMetricsResource;
+use App\Http\Requests\V1\StoreProbeMetricRequest;
+use App\Http\Resources\V1\ProbeMetricsResource;
 use App\Models\ProbeMetrics;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

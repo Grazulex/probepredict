@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\V1;
 
 use App\Actions\Probes\CreateProbesAction;
 use App\Actions\Probes\DeleteProbesAction;
 use App\Actions\Probes\UpdateProbesAction;
-use App\Http\Requests\StoreProbeRequest;
-use App\Http\Requests\UpdateProbeRequest;
-use App\Http\Resources\Collections\ProbesCollection;
-use App\Http\Resources\ProbesResource;
+use App\Http\Requests\V1\StoreProbeRequest;
+use App\Http\Requests\V1\UpdateProbeRequest;
+use App\Http\Resources\V1\Collections\ProbesCollection;
+use App\Http\Resources\V1\ProbesResource;
 use App\Models\Probes;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,33 +45,33 @@ final class ProbesController extends BaseController
         );
     }
 
-    public function show(Probes $probe): JsonResponse
+    public function show(Probes $probes): JsonResponse
     {
         return $this->sendResponse(
-            result: new ProbesResource($probe),
+            result: new ProbesResource($probes),
             message: 'Probe retrieved successfully.',
             status: Response::HTTP_OK,
         );
     }
 
-    public function update(UpdateProbeRequest $request, Probes $probe, UpdateProbesAction $updateProbesAction): JsonResponse
+    public function update(UpdateProbeRequest $request, Probes $probes, UpdateProbesAction $updateProbesAction): JsonResponse
     {
         $probe = $updateProbesAction->handle(
             input: $request->only(['name', 'description', 'probe_type_id']),
-            probes: $probe,
+            probes: $probes,
         );
 
         return $this->sendResponse(
-            result:  new ProbesResource($probe),
+            result:  new ProbesResource($probes),
             message: 'Probe updated successfully.',
             status: Response::HTTP_OK,
         );
     }
 
-    public function destroy(Probes $probe, DeleteProbesAction $deleteProbesAction): JsonResponse
+    public function destroy(Probes $probes, DeleteProbesAction $deleteProbesAction): JsonResponse
     {
         $deleteProbesAction->handle(
-            probes: $probe,
+            probes: $probes,
         );
 
         return $this->sendResponse(

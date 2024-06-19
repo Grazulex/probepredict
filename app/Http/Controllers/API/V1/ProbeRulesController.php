@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\V1;
 
 use App\Actions\Rules\CreateRulesAction;
 use App\Actions\Rules\DeleteRulesAction;
 use App\Actions\Rules\UpdateRulesAction;
-use App\Http\Requests\StoreProbeRuleRequest;
-use App\Http\Requests\UpdateProbeRuleRequest;
-use App\Http\Resources\ProbeRulesResource;
+use App\Http\Requests\V1\StoreProbeRuleRequest;
+use App\Http\Requests\V1\UpdateProbeRuleRequest;
+use App\Http\Resources\V1\ProbeRulesResource;
 use App\Models\ProbeRules;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

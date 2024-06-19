@@ -12,7 +12,7 @@ it('retrieves probes correctly', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
     Permission::create(['name' => 'list probes']);
     $user->givePermissionTo('list probes');
-    $response = $this->actingAs($user)->get('/api/probes');
+    $response = $this->actingAs($user)->get('/api/v1/probes');
 
     $response->assertStatus(Response::HTTP_OK);
 });
@@ -31,7 +31,7 @@ it('creates probe with valid data', function (): void {
         'probe_type_id' => $probeType->id,
     ];
 
-    $response = $this->actingAs($user)->post('/api/probes', $probeData);
+    $response = $this->actingAs($user)->post('/api/v1/probes', $probeData);
     $response->assertStatus(Response::HTTP_CREATED);
     $this->assertDatabaseHas('probes', $probeData);
 });
@@ -45,7 +45,7 @@ it('retrieves probe correctly by id', function (): void {
             'team_id' => $user->currentTeam->id,
         ],
     );
-    $response = $this->actingAs($user)->get('/api/probes/' . $probe->id);
+    $response = $this->actingAs($user)->get('/api/v1/probes/' . $probe->id);
     $response->assertStatus(Response::HTTP_OK);
 });
 
@@ -66,7 +66,7 @@ it('updates probe with valid data', function (): void {
         'probe_type_id' => $probe->probe_type_id,
     ];
 
-    $response = $this->actingAs($user)->put('/api/probes/' . $probe->id, $probeData);
+    $response = $this->actingAs($user)->put('/api/v1/probes/' . $probe->id, $probeData);
     $response->assertStatus(Response::HTTP_OK);
     $this->assertDatabaseHas('probes', $probeData);
 });
@@ -80,7 +80,7 @@ it('deletes probe', function (): void {
             'team_id' => $user->currentTeam->id,
         ],
     );
-    $response = $this->actingAs($user)->delete('/api/probes/' . $probe->id);
+    $response = $this->actingAs($user)->delete('/api/v1/probes/' . $probe->id);
     $response->assertStatus(Response::HTTP_NO_CONTENT);
     $this->assertDatabaseMissing('probes', ['id' => $probe->id]);
 });
@@ -96,7 +96,7 @@ it('fails to create probe with invalid data', function (): void {
         'probe_type_id' => '',
     ];
 
-    $response = $this->actingAs($user)->post('/api/probes', $probeData);
+    $response = $this->actingAs($user)->post('/api/v1/probes', $probeData);
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 });
 
@@ -116,7 +116,7 @@ it('fails to update probe with invalid data', function (): void {
         'probe_type_id' => '',
     ];
 
-    $response = $this->actingAs($user)->put('/api/probes/' . $probe->id, $probeData);
+    $response = $this->actingAs($user)->put('/api/v1/probes/' . $probe->id, $probeData);
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 });
 
@@ -128,7 +128,7 @@ it('fails to create probe without permission', function (): void {
         'probe_type_id' => 1,
     ];
 
-    $response = $this->actingAs($user)->post('/api/probes', $probeData);
+    $response = $this->actingAs($user)->post('/api/v1/probes', $probeData);
     $response->assertStatus(Response::HTTP_FORBIDDEN);
 });
 
@@ -146,7 +146,7 @@ it('fails to update probe without permission', function (): void {
         'probe_type_id' => 1,
     ];
 
-    $response = $this->actingAs($user)->put('/api/probes/' . $probe->id, $probeData);
+    $response = $this->actingAs($user)->put('/api/v1/probes/' . $probe->id, $probeData);
     $response->assertStatus(Response::HTTP_FORBIDDEN);
 });
 
@@ -157,13 +157,13 @@ it('fails to delete probe without permission', function (): void {
             'team_id' => $user->currentTeam->id,
         ],
     );
-    $response = $this->actingAs($user)->delete('/api/probes/' . $probe->id);
+    $response = $this->actingAs($user)->delete('/api/v1/probes/' . $probe->id);
     $response->assertStatus(Response::HTTP_FORBIDDEN);
 });
 
 it('fails to retrieve probes without permission', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
-    $response = $this->actingAs($user)->get('/api/probes');
+    $response = $this->actingAs($user)->get('/api/v1/probes');
     $response->assertStatus(Response::HTTP_FORBIDDEN);
 });
 
@@ -172,18 +172,18 @@ it('fails to retrieve probe if not in same team', function (): void {
     Permission::create(['name' => 'list probes']);
     $user->givePermissionTo('list probes');
     $probe = Probes::factory()->create();
-    $response = $this->actingAs($user)->get('/api/probes/' . $probe->id);
+    $response = $this->actingAs($user)->get('/api/v1/probes/' . $probe->id);
     $response->assertStatus(Response::HTTP_FORBIDDEN);
 });
 
 it('fails to retrieve probe with invalid id', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
-    $response = $this->actingAs($user)->get('/api/probes/9999');
+    $response = $this->actingAs($user)->get('/api/v1/probes/9999');
     $response->assertStatus(Response::HTTP_NOT_FOUND);
 });
 
 it('fails to delete probe with invalid id', function (): void {
     $user = User::factory()->withApiToken()->withPersonalTeam()->create();
-    $response = $this->actingAs($user)->delete('/api/probes/9999');
+    $response = $this->actingAs($user)->delete('/api/v1/probes/9999');
     $response->assertStatus(Response::HTTP_NOT_FOUND);
 });

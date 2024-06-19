@@ -28,7 +28,7 @@ test('create probe rules correctly', function (): void {
         'condition' => '20',
     ];
 
-    $response = $this->actingAs($user)->post('/api/rules', $probeData);
+    $response = $this->actingAs($user)->post('/api/v1/rules', $probeData);
     $response->assertStatus(Response::HTTP_CREATED);
     $this->assertDatabaseHas('probe_rules', $probeData);
 });
@@ -54,12 +54,12 @@ test('update rules', function (): void {
         'condition' => '20',
     ];
 
-    $response = $this->actingAs($user)->post('/api/rules', $probeData);
+    $response = $this->actingAs($user)->post('/api/v1/rules', $probeData);
     $response->assertStatus(Response::HTTP_CREATED);
     $this->assertDatabaseHas('probe_rules', $probeData);
 
     $probeData['condition'] = '30';
-    $response = $this->actingAs($user)->put('/api/rules/' . $probe->id, $probeData);
+    $response = $this->actingAs($user)->put('/api/v1/rules/' . $probe->id, $probeData);
     $response->assertStatus(Response::HTTP_OK);
     $this->assertDatabaseHas('probe_rules', $probeData);
 });
@@ -85,11 +85,11 @@ test('delete rules', function (): void {
         'condition' => '20',
     ];
 
-    $response = $this->actingAs($user)->post('/api/rules', $probeData);
+    $response = $this->actingAs($user)->post('/api/v1/rules', $probeData);
     $response->assertStatus(Response::HTTP_CREATED);
     $this->assertDatabaseHas('probe_rules', $probeData);
 
-    $response = $this->actingAs($user)->delete('/api/rules/' . $probe->id);
+    $response = $this->actingAs($user)->delete('/api/v1/rules/' . $probe->id);
     $response->assertStatus(Response::HTTP_NO_CONTENT);
     $this->assertDatabaseMissing('probe_rules', $probeData);
 });

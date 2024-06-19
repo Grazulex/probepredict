@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\V1;
 
-use App\Http\Resources\Collections\ProbeTypesCollection;
-use App\Http\Resources\ProbeTypesResource;
+use App\Http\Resources\V1\Collections\ProbeTypesCollection;
+use App\Http\Resources\V1\ProbeTypesResource;
 use App\Models\ProbeTypes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

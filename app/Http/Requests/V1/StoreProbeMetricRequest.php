@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
-use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\API\V1\BaseController;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpFoundation\Response;
 
-class StoreProbeRuleRequest extends FormRequest
+class StoreProbeMetricRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
             'probe_id' => ['required', 'exists:probes,id,team_id,' . $this->user()->currentTeam->id],
             'metric_type_id' => ['required', 'exists:metric_types,id'],
-            'operator' => ['required'],
-            'condition' => ['required'],
+            'value' => ['required'],
         ];
     }
 
