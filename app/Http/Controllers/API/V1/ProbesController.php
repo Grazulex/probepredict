@@ -52,7 +52,6 @@ final class ProbesController extends BaseController
             status: Response::HTTP_OK,
         );
     }
-
     public function update(UpdateProbeRequest $request, Probes $probes, UpdateProbesAction $updateProbesAction): JsonResponse
     {
         $probe = $updateProbesAction->handle(
