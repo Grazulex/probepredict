@@ -1,0 +1,193 @@
+openapi: 3.0.1
+info:
+  title: Exemple d'API
+  description: Une API d'exemple utilisant une authentification Bearer avec Laravel Sanctum
+  version: 1.0.0
+
+servers:
+  - url: http://localhost/api/v1
+
+paths:
+  /auth/login:
+    post:
+      summary: Authentification utilisateur
+      description: Authentifie un utilisateur avec un login et un mot de passe et retourne un token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User login successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Unauthorised
+
+  /probes:
+    get:
+      summary: Get all probes
+      description: Get all probes link to your team
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page number
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 5
+          description: The number of items per page
+      responses:
+        '200':
+          description: Probes retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProbesResponse'
+        '401':
+          description: Unauthorised
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    DateTimeItem:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          description: Date/time in timestamp
+          example: 1718768528
+        utc:
+          type: string
+          description: Date/Time in UTC format
+          example: 2024-06-19T03:42:08.000000Z
+        human:
+          type: string
+          description: Date/time is human format. Diff between the date/time and now
+          example: 2 days ago
+        timezone:
+          type: string
+          description: Timezone of UTC/Server
+          example: Europe/Brussels
+        parts:
+          type: array
+          description: Date/Time split in parts
+          items:
+            properties:
+              date:
+                type: string
+                example: 2024-06-19
+              time:
+                type: string
+                example: 03:42:08
+              day:
+                type: integer
+                example: 19
+              month:
+                type: integer
+                example: 6
+              year:
+                type: integer
+                example: 2024
+              hour:
+                type: integer
+                example: 3
+              minute:
+                type: integer
+                example: 42
+              second:
+                type: integer
+                example: 8
+    ProbeTypesItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          description: Name of the probe type
+          example: Probe Type
+        description:
+          type: string
+          description: The is the probe type description
+          example: Probe type description
+    ProbesItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example : 10
+        name:
+          type: string
+          example: My probe
+        description:
+          type : string
+          example: This is my probe
+        stats_on_going:
+          type: integer
+          description: Stats/calculation still ongoing
+          example: 1
+        probe_type:
+          type: array
+          description: Type of probe
+          items:
+            $ref: '#/components/schemas/ProbeTypesItem'
+        created_at:
+          type: array
+          description: Creation date
+          items:
+            $ref: '#/components/schemas/DateTimeItem'
+        updates_at:
+          type: array
+          description: Last updated date
+          items:
+            $ref: '#/components/schemas/DateTimeItem'
+    ProbesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProbesItem'
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string

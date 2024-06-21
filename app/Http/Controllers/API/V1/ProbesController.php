@@ -9,7 +9,6 @@ use App\Actions\Probes\DeleteProbesAction;
 use App\Actions\Probes\UpdateProbesAction;
 use App\Http\Requests\V1\StoreProbeRequest;
 use App\Http\Requests\V1\UpdateProbeRequest;
-use App\Http\Resources\V1\Collections\ProbesCollection;
 use App\Http\Resources\V1\ProbesResource;
 use App\Models\Probes;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +23,7 @@ final class ProbesController extends BaseController
         $probes = Probes::sameTeam()->paginate($size);
 
         return $this->sendResponse(
-            result: new ProbesCollection($probes),
+            result: ProbesResource::collection($probes),
             message: 'Probes retrieved successfully.',
             paginator: true,
         );
@@ -49,7 +48,6 @@ final class ProbesController extends BaseController
         return $this->sendResponse(
             result: new ProbesResource($probes),
             message: 'Probe retrieved successfully.',
-            status: Response::HTTP_OK,
         );
     }
     public function update(UpdateProbeRequest $request, Probes $probes, UpdateProbesAction $updateProbesAction): JsonResponse
@@ -62,7 +60,6 @@ final class ProbesController extends BaseController
         return $this->sendResponse(
             result:  new ProbesResource($probes),
             message: 'Probe updated successfully.',
-            status: Response::HTTP_OK,
         );
     }
 
