@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Enums\ProbeTypeEnum;
-use App\Models\MetricTypes;
-use App\Models\ProbeTypes;
+use App\Models\MetricType;
+use App\Models\ProbeType;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -91,42 +91,42 @@ final class DatabaseSeeder extends Seeder
         $user->assignRole(['administrator', 'user']);
         $user->givePermissionTo(['administrator types', 'list types', 'create probes', 'list probes', 'delete probes', 'create metrics', 'delete metrics', 'create rules', 'delete rules']);
 
-        ProbeTypes::factory()->create([
+        ProbeType::factory()->create([
             'name' => 'Environmental',
             'description' => 'Environmental probes (temperature, humidity, ...)',
             'enum' => ProbeTypeEnum::ENVIRONMENT->value,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        ProbeTypes::factory()->create([
+        ProbeType::factory()->create([
             'name' => 'Battery',
             'description' => 'Battery probes (voltage, current, ...)',
             'enum' => ProbeTypeEnum::BATTERY->value,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        ProbeTypes::factory()->create([
+        ProbeType::factory()->create([
             'name' => 'Car',
             'description' => 'Car probes (voltage, km, ...)',
             'enum' => ProbeTypeEnum::CAR->value,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        MetricTypes::factory()->create([
+        MetricType::factory()->create([
             'name' => 'Temperature Celsius',
             'description' => 'Temperature in Celsius',
             'unit' => '°C',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        MetricTypes::factory()->create([
+        MetricType::factory()->create([
             'name' => 'Temperature Fahrenheit',
             'description' => 'Temperature in Fahrenheit',
             'unit' => '°F',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        MetricTypes::factory()->create([
+        MetricType::factory()->create([
             'name' => 'Humidity',
             'description' => 'Humidity in percentage',
             'unit' => '%',

@@ -16,11 +16,11 @@ class VerifyTeamOwnership
     {
         //check route to know if route is probe, metrics or rules
         if ('api/v1/probes' === $request->route()->getPrefix()) {
-            $probe = $request->route('probes');
+            $probe = $request->route('probe');
         } elseif ('api/v1/metrics' === $request->route()->getPrefix()) {
-            $probe = $request->route('probeMetrics')->probe;
+            $probe = $request->route('probeMetric')->probe;
         } elseif ('api/v1/rules' === $request->route()->getPrefix()) {
-            $probe = $request->route('probeRules')->probe;
+            $probe = $request->route('probeRule')->probe;
         } else {
             $response = new BaseController();
             throw new HttpResponseException($response->sendError(

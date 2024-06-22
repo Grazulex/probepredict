@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Http\Controllers\API\V1\BaseController as BaseController;
 use App\Models\User;
+use App\Traits\JsonResponses;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-final class RegisterController extends BaseController
+final class RegisterController
 {
+    use JsonResponses;
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -26,11 +27,7 @@ final class RegisterController extends BaseController
 
         if ($validator->fails()) {
             throw new HttpResponseException(
-                $this->sendError(
-                    error: 'Validation Error.',
-                    messages: $validator->errors(),
-                    status: Response::HTTP_BAD_REQUEST,
-                ),
+                $this->errorResponse($validator->errors(), Response::HTTP_BAD_REQUEST),
             );
         }
 
@@ -42,7 +39,7 @@ final class RegisterController extends BaseController
         $success['roles'] = $user->getRoleNames();
         $success['name'] = $user->name;
 
-        return $this->sendResponse($success, 'User register successfully.', 201);
+        return $this->successResponse($success, Response::HTTP_CREATED);
     }
 
     public function login(Request $request): JsonResponse
@@ -53,13 +50,12 @@ final class RegisterController extends BaseController
             $success['roles'] = $user->getRoleNames();
             $success['name'] = $user->name;
 
-            return $this->sendResponse($success, 'User login successfully.');
+            return $this->successResponse($success);
         }
         throw new HttpResponseException(
-            $this->sendError(
-                error: 'Unauthorised.',
-                messages: ['error' => 'Unauthorised'],
-                status: Response::HTTP_UNAUTHORIZED,
+            $this->errorResponse(
+                'Unauthorised',
+                Response::HTTP_UNAUTHORIZED,
             ),
         );
     }

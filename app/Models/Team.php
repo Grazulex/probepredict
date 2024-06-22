@@ -19,7 +19,7 @@ use Laravel\Jetstream\Team as JetstreamTeam;
  * @property bool $personal_team
  * @property DateTime $created_at
  * @property DateTime $updated_at
- * @property Probes[] $probes
+ * @property Probe[] $probes
  */
 final class Team extends JetstreamTeam
 {
@@ -48,7 +48,7 @@ final class Team extends JetstreamTeam
 
     public function probes()
     {
-        return $this->hasMany(Probes::class);
+        return $this->hasMany(Probe::class);
     }
 
     /**

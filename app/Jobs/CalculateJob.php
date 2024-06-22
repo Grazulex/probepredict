@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Models\MetricTypes;
-use App\Models\Probes;
-use App\Models\ProbeTypes;
+use App\Models\MetricType;
+use App\Models\Probe;
+use App\Models\ProbeType;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -23,7 +23,7 @@ class CalculateJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected Probes $probe, protected ProbeTypes $probe_type, protected MetricTypes $metric_type) {}
+    public function __construct(protected Probe $probe, protected ProbeType $probe_type, protected MetricType $metric_type) {}
 
     /**
      * Execute the job.

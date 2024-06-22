@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Strategies;
 
-use App\Models\MetricTypes;
-use App\Models\ProbeMetrics;
-use App\Models\Probes;
+use App\Models\MetricType;
+use App\Models\Probe;
+use App\Models\ProbeMetric;
 
 final class EnvironmentalStrategy implements CalculationStrategy
 {
-    public function calculate(Probes $probes, MetricTypes $metricTypes): void
+    public function calculate(Probe $probes, MetricType $metricTypes): void
     {
         $rule = $probes->rules->where('metric_type_id', $metricTypes->id)->first();
         if (null === $rule) {
@@ -26,7 +26,7 @@ final class EnvironmentalStrategy implements CalculationStrategy
         foreach ($metrics as $metric) {
             $quantity = $metrics->count();
             $firstMetric = $metric;
-            $nextMetric = ProbeMetrics::where('id', '>', $metric->id)
+            $nextMetric = ProbeMetric::where('id', '>', $metric->id)
                 ->where('metric_type_id', $metricTypes->id)
                 ->where('probe_id', $probes->id)
                 ->orderBy('id', 'asc')
