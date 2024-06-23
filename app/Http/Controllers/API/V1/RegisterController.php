@@ -4,54 +4,41 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Models\User;
+use App\Actions\User\CreateUserAction;
+use App\Http\Requests\V1\LoginUserRequest;
+use App\Http\Requests\V1\StoreUserRequest;
+use App\Http\Resources\V1\UserResource;
 use App\Traits\JsonResponses;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 final class RegisterController
 {
     use JsonResponses;
-    public function register(Request $request): JsonResponse
+    public function register(StoreUserRequest $request, CreateUserAction $createUserAction): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'c_password' => 'required|same:password',
-        ]);
+        $user = $createUserAction->handle(
+            data: $request->only('name', 'email', 'password'),
+        );
 
-        if ($validator->fails()) {
-            throw new HttpResponseException(
-                $this->errorResponse($validator->errors(), Response::HTTP_BAD_REQUEST),
-            );
-        }
-
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $user->assignRole('user');
-        $success['token'] = $user->createToken('MyApp')->plainTextToken;
-        $success['roles'] = $user->getRoleNames();
-        $success['name'] = $user->name;
-
-        return $this->successResponse($success, Response::HTTP_CREATED);
+        return $this->successResponse(
+            data: new UserResource($user),
+            code :Response::HTTP_CREATED,
+        );
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(LoginUserRequest $request): JsonResponse
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            $success['token'] = $user->createToken('MyApp')->plainTextToken;
-            $success['roles'] = $user->getRoleNames();
-            $success['name'] = $user->name;
 
-            return $this->successResponse($success);
+            return $this->successResponse(
+                data: new UserResource($user),
+            );
         }
+
         throw new HttpResponseException(
             $this->errorResponse(
                 'Unauthorised',

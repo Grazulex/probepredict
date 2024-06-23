@@ -29,7 +29,7 @@ final class ProbeRuleController
 
     public function update(UpdateProbeRuleRequest $request, ProbeRule $probeRule, UpdateRuleAction $updateRulesAction): JsonResponse
     {
-        $probeRules = $updateRulesAction->handle(
+        $probeRule = $updateRulesAction->handle(
             input: $request->only(['operator','probe_id','condition','metric_type_id']),
             probeRule: $probeRule,
         );

@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API\V1;
 
+use App\Actions\MetricTypes\CreateMetricTypeAction;
+use App\Actions\MetricTypes\DeleteMetricTypeAction;
+use App\Actions\MetricTypes\UpdateMetricTypeAction;
+use App\Http\Requests\V1\StoreMetricTypeRequest;
+use App\Http\Requests\V1\UpdateMetricTypeRequest;
 use App\Http\Resources\V1\MetricTypeResource;
 use App\Models\MetricType;
 use App\Traits\JsonResponses;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 final class MetricTypeController
@@ -20,72 +23,35 @@ final class MetricTypeController
         return $this->successResponse(MetricTypeResource::collection(MetricType::all()));
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreMetricTypeRequest $request, CreateMetricTypeAction $createMetricTypeAction): JsonResponse
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => ['required', 'string', 'max:255', 'unique:metric_types'],
-            'description' => 'required',
-            'unit' => 'required',
-        ]);
+        $metric_type = $createMetricTypeAction->handle(
+            input:$request->only(['name', 'description', 'unit']),
+        );
 
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), Response::HTTP_BAD_REQUEST);
-        }
-
-        $metric_types = MetricType::create($input);
-
-        return $this->successResponse(new MetricTypeResource($metric_types), Response::HTTP_CREATED);
+        return $this->successResponse(new MetricTypeResource($metric_type), Response::HTTP_CREATED);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(MetricType $metricType): JsonResponse
     {
-        $metric_types = MetricType::find($id);
-
-        if (null === $metric_types) {
-            return $this->errorResponse('Metric not found.', Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->successResponse(new MetricTypeResource($metric_types));
+        return $this->successResponse(new MetricTypeResource($metricType));
     }
 
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdateMetricTypeRequest $updateMetricTypeRequest, MetricType $metricType, UpdateMetricTypeAction $updateMetricTypeAction): JsonResponse
     {
-        $metric_types = MetricType::find($id);
+        $metric_type = $updateMetricTypeAction->handle(
+            input: $updateMetricTypeRequest->only(['name', 'description', 'unit']),
+            metricType: $metricType,
+        );
 
-        if (null === $metric_types) {
-            return $this->errorResponse('Metric not found.', Response::HTTP_NOT_FOUND);
-        }
-
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => ['required', 'string', 'max:255', 'unique:mertic_types'],
-            'description' => 'required',
-            'unit' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), Response::HTTP_BAD_REQUEST);
-        }
-
-        $metric_types->name = $input['name'];
-        $metric_types->description = $input['description'];
-        $metric_types->unit = $input['unit'];
-        $metric_types->save();
-
-        return $this->successResponse(new MetricTypeResource($metric_types));
+        return $this->successResponse(new MetricTypeResource($metric_type));
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(MetricType $metricType, DeleteMetricTypeAction $deleteMetricTypeAction): JsonResponse
     {
-        $metric_types = MetricType::find($id);
-
-        if (null === $metric_types) {
-            return $this->errorResponse('Metric not found.', Response::HTTP_NOT_FOUND);
-        }
-
-        $metric_types->delete();
+        $deleteMetricTypeAction->handle(
+            metricType: $metricType,
+        );
 
         return $this->successResponse([], Response::HTTP_NO_CONTENT);
     }

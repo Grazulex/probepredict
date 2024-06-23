@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API\V1;
 
+use App\Actions\ProbeTypes\CreateProbeTypeAction;
+use App\Actions\ProbeTypes\DeleteProbeTypeAction;
+use App\Actions\ProbeTypes\UpdateProbeTypeAction;
+use App\Http\Requests\V1\StoreProbeTypeRequest;
+use App\Http\Requests\V1\UpdateProbeTypeRequest;
 use App\Http\Resources\V1\ProbeTypeResource;
 use App\Models\ProbeType;
 use App\Traits\JsonResponses;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,69 +28,35 @@ final class ProbeTypeController
         return $this->successResponse(ProbeTypeResource::collection($probe_types));
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreProbeTypeRequest $request, CreateProbeTypeAction $createProbeTypeAction): JsonResponse
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => ['required', 'string', 'max:255', 'unique:probe_types'],
-            'description' => 'required',
-        ]);
+        $probe_type = $createProbeTypeAction->handle(
+            input: $request->only(['name', 'description']),
+        );
 
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), Response::HTTP_BAD_REQUEST);
-        }
-
-        $probe_types = ProbeType::create($input);
-
-        return $this->successResponse(new ProbeTypeResource($probe_types), Response::HTTP_CREATED);
+        return $this->successResponse(new ProbeTypeResource($probe_type), Response::HTTP_CREATED);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(ProbeType $probeType): JsonResponse
     {
-        $probe_types = ProbeType::find($id);
-
-        if (null === $probe_types) {
-            return $this->errorResponse('Probe not found.', Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->successResponse(new ProbeTypeResource($probe_types));
+        return $this->successResponse(new ProbeTypeResource($probeType));
     }
 
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdateProbeTypeRequest $request, ProbeType $probeType, UpdateProbeTypeAction $updateProbeTypeAction): JsonResponse
     {
-        $probe_types = ProbeType::find($id);
+        $probe_type = $updateProbeTypeAction->handle(
+            input: $request->only(['name', 'description']),
+            probeType: $probeType,
+        );
 
-        if (null === $probe_types) {
-            return $this->errorResponse('Probe not found.', Response::HTTP_NOT_FOUND);
-        }
-
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => ['required', 'string', 'max:255', 'unique:probe_types'],
-            'description' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), Response::HTTP_BAD_REQUEST);
-        }
-
-        $probe_types->name = $input['name'];
-        $probe_types->description = $input['description'];
-        $probe_types->save();
-
-        return $this->successResponse(new ProbeTypeResource($probe_types));
+        return $this->successResponse(new ProbeTypeResource($probe_type));
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(ProbeType $probeType, DeleteProbeTypeAction $deleteProbeTypeAction): JsonResponse
     {
-        $probe_types = ProbeType::find($id);
-
-        if (null === $probe_types) {
-            return $this->errorResponse('Probe not found.', Response::HTTP_NOT_FOUND);
-        }
-
-        $probe_types->delete();
+        $deleteProbeTypeAction->handle(
+            probeType: $probeType,
+        );
 
         return $this->successResponse([], Response::HTTP_NO_CONTENT);
     }
