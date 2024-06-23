@@ -16,10 +16,23 @@ use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ProbeTypeController
+ *
+ * @package App\Http\Controllers\API\V1
+ *
+ * This controller handles all the HTTP requests related to ProbeTypes.
+ */
 final class ProbeTypeController
 {
     use JsonResponses;
 
+    /**
+     * Display a listing of the probe types.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function index(Request $request): JsonResponse
     {
         $size = (int) $request->query('size', 5);
@@ -28,30 +41,58 @@ final class ProbeTypeController
         return $this->successResponse(ProbeTypeResource::collection($probe_types));
     }
 
+    /**
+     * Store a newly created probe type in storage.
+     *
+     * @param StoreProbeTypeRequest $request
+     * @param CreateProbeTypeAction $createProbeTypeAction
+     * @return JsonResponse
+     */
     public function store(StoreProbeTypeRequest $request, CreateProbeTypeAction $createProbeTypeAction): JsonResponse
     {
         $probe_type = $createProbeTypeAction->handle(
-            input: $request->only(['name', 'description']),
+            input: $this->getTypeAttributes($request),
         );
 
         return $this->successResponse(new ProbeTypeResource($probe_type), Response::HTTP_CREATED);
     }
 
+    /**
+     * Display the specified probe type.
+     *
+     * @param ProbeType $probeType
+     * @return JsonResponse
+     */
     public function show(ProbeType $probeType): JsonResponse
     {
         return $this->successResponse(new ProbeTypeResource($probeType));
     }
 
+    /**
+     * Update the specified probe type in storage.
+     *
+     * @param UpdateProbeTypeRequest $request
+     * @param ProbeType $probeType
+     * @param UpdateProbeTypeAction $updateProbeTypeAction
+     * @return JsonResponse
+     */
     public function update(UpdateProbeTypeRequest $request, ProbeType $probeType, UpdateProbeTypeAction $updateProbeTypeAction): JsonResponse
     {
         $probe_type = $updateProbeTypeAction->handle(
-            input: $request->only(['name', 'description']),
+            input: $this->getTypeAttributes($request),
             probeType: $probeType,
         );
 
         return $this->successResponse(new ProbeTypeResource($probe_type));
     }
 
+    /**
+     * Remove the specified probe type from storage.
+     *
+     * @param ProbeType $probeType
+     * @param DeleteProbeTypeAction $deleteProbeTypeAction
+     * @return JsonResponse
+     */
     public function destroy(ProbeType $probeType, DeleteProbeTypeAction $deleteProbeTypeAction): JsonResponse
     {
         $deleteProbeTypeAction->handle(
@@ -59,5 +100,10 @@ final class ProbeTypeController
         );
 
         return $this->successResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    private function getTypeAttributes(Request $request): array
+    {
+        return $request->only(['name', 'description']);
     }
 }

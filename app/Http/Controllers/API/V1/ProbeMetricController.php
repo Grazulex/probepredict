@@ -13,9 +13,24 @@ use App\Traits\JsonResponses;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ProbeMetricController
+ *
+ * @package App\Http\Controllers\API\V1
+ *
+ * This controller handles all the HTTP requests related to ProbeMetrics.
+ */
 final class ProbeMetricController
 {
     use JsonResponses;
+
+    /**
+     * Store a newly created probe metric in storage.
+     *
+     * @param StoreProbeMetricRequest $request
+     * @param CreateMetricAction $createMetricsAction
+     * @return JsonResponse
+     */
     public function store(StoreProbeMetricRequest $request, CreateMetricAction $createMetricsAction): JsonResponse
     {
         $probeMetric = $createMetricsAction->handle(
@@ -25,6 +40,13 @@ final class ProbeMetricController
         return $this->successResponse(new ProbeMetricResource($probeMetric), Response::HTTP_CREATED);
     }
 
+    /**
+     * Remove the specified probe metric from storage.
+     *
+     * @param ProbeMetric $probeMetric
+     * @param DeleteMetricAction $deleteMetricsAction
+     * @return JsonResponse
+     */
     public function destroy(ProbeMetric $probeMetric, DeleteMetricAction $deleteMetricsAction): JsonResponse
     {
         $deleteMetricsAction->handle(

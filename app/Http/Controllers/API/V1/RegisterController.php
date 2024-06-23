@@ -14,9 +14,24 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class RegisterController
+ *
+ * @package App\Http\Controllers\API\V1
+ *
+ * This controller handles the registration and login of users.
+ */
 final class RegisterController
 {
     use JsonResponses;
+
+    /**
+     * Register a new user.
+     *
+     * @param StoreUserRequest $request
+     * @param CreateUserAction $createUserAction
+     * @return JsonResponse
+     */
     public function register(StoreUserRequest $request, CreateUserAction $createUserAction): JsonResponse
     {
         $user = $createUserAction->handle(
@@ -29,6 +44,13 @@ final class RegisterController
         );
     }
 
+    /**
+     * Login a user.
+     *
+     * @param LoginUserRequest $request
+     * @return JsonResponse
+     * @throws HttpResponseException
+     */
     public function login(LoginUserRequest $request): JsonResponse
     {
         if (Auth::attempt($request->only('email', 'password'))) {
