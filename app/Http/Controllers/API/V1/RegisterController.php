@@ -31,7 +31,7 @@ final class RegisterController
 
     public function login(LoginUserRequest $request): JsonResponse
     {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
 
             return $this->successResponse(
