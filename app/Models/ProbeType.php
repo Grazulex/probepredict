@@ -9,7 +9,6 @@ use App\Strategies\BatteryStrategy;
 use App\Strategies\CalculationStrategy;
 use App\Strategies\CarStrategy;
 use App\Strategies\EnvironmentalStrategy;
-use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,8 +21,6 @@ use RuntimeException;
  * @property string $name
  * @property string $description
  * @property ProbeTypeEnum $enum
- * @property DateTime $created_at
- * @property DateTime $updated_at
  * @property Probe[] $probes
  */
 final class ProbeType extends Model
@@ -34,14 +31,10 @@ final class ProbeType extends Model
         'name',
         'description',
         'enum',
-        'created_at',
-        'updated_at',
     ];
 
     protected $casts = [
         'enum' => ProbeTypeEnum::class,
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
     ];
 
     public function probes(): HasMany

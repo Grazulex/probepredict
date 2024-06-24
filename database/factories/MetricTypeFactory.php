@@ -17,8 +17,6 @@ final class MetricTypeFactory extends Factory
             'name' => $this->faker->name,
             'description' => $this->faker->text,
             'unit' => $this->faker->word,
-            'created_at' => $this->faker->dateTime,
-            'updated_at' => $this->faker->dateTime,
         ];
     }
 }

@@ -18,7 +18,6 @@ return new class () extends Migration {
             $table->string('name')->unique();
             $table->string('description');
             $table->string('enum')->default(ProbeTypeEnum::ENVIRONMENT->value);
-            $table->timestamps();
         });
     }
 

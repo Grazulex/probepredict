@@ -95,43 +95,31 @@ final class DatabaseSeeder extends Seeder
             'name' => 'Environmental',
             'description' => 'Environmental probes (temperature, humidity, ...)',
             'enum' => ProbeTypeEnum::ENVIRONMENT->value,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
         ProbeType::factory()->create([
             'name' => 'Battery',
             'description' => 'Battery probes (voltage, current, ...)',
             'enum' => ProbeTypeEnum::BATTERY->value,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
         ProbeType::factory()->create([
             'name' => 'Car',
             'description' => 'Car probes (voltage, km, ...)',
             'enum' => ProbeTypeEnum::CAR->value,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
         MetricType::factory()->create([
             'name' => 'Temperature Celsius',
             'description' => 'Temperature in Celsius',
             'unit' => '°C',
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
         MetricType::factory()->create([
             'name' => 'Temperature Fahrenheit',
             'description' => 'Temperature in Fahrenheit',
             'unit' => '°F',
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
         MetricType::factory()->create([
             'name' => 'Humidity',
             'description' => 'Humidity in percentage',
             'unit' => '%',
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
 
     }
