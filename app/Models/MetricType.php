@@ -21,6 +21,7 @@ final class MetricType extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $fillable = [
         'name',
         'description',

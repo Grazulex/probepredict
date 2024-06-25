@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\V1;
 
-use App\Http\Controllers\API\V1\BaseController;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Symfony\Component\HttpFoundation\Response;
+use App\Traits\JsonResponses;
 
-class StoreProbeMetricRequest extends FormRequest
+class StoreProbeMetricRequest extends BaseRequest
 {
+    use JsonResponses;
     public function rules(): array
     {
         return [
@@ -19,18 +16,5 @@ class StoreProbeMetricRequest extends FormRequest
             'metric_type_id' => ['required', 'exists:metric_types,id'],
             'value' => ['required'],
         ];
-    }
-
-    protected function failedValidation(Validator $validator): void
-    {
-        $errors = $validator->errors();
-        $base = new BaseController();
-        $response = $base->sendError(
-            error: 'Validation Error.',
-            messages: $errors,
-            status: Response::HTTP_UNPROCESSABLE_ENTITY,
-        );
-
-        throw new HttpResponseException($response);
     }
 }

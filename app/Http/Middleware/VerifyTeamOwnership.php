@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\API\V1\BaseController;
+use App\Traits\JsonResponses;
 use Closure;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VerifyTeamOwnership
 {
+    use JsonResponses;
     public function handle(Request $request, Closure $next): Response
     {
         //check route to know if route is probe, metrics or rules
@@ -22,18 +23,16 @@ class VerifyTeamOwnership
         } elseif ('api/v1/rules' === $request->route()->getPrefix()) {
             $probe = $request->route('probeRule')->probe;
         } else {
-            $response = new BaseController();
-            throw new HttpResponseException($response->sendError(
-                error: 'Route not found.',
-                status: Response::HTTP_NOT_FOUND,
+            throw new HttpResponseException($this->errorResponse(
+                message: 'Route not found.',
+                code: Response::HTTP_NOT_FOUND,
             ));
         }
 
         if ($request->user()->currentTeam->id !== $probe->team_id) {
-            $response = new BaseController();
-            throw new HttpResponseException($response->sendError(
-                error: 'You do not own this probe.',
-                status: Response::HTTP_FORBIDDEN,
+            throw new HttpResponseException($this->errorResponse(
+                message: 'You do not own this probe.',
+                code: Response::HTTP_FORBIDDEN,
             ));
         }
 

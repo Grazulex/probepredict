@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Traits\JsonResponses;
 
-class UpdateMetricTypeRequest extends FormRequest
+class UpdateMetricTypeRequest extends BaseRequest
 {
+    use JsonResponses;
     public function rules(): array
     {
         return [
@@ -18,16 +17,4 @@ class UpdateMetricTypeRequest extends FormRequest
             'unit' => 'required',
         ];
     }
-
-    protected function failedValidation(Validator $validator): void
-    {
-        $errors = $validator->errors();
-        $response = response()->json([
-            'error' => 'Validation Error.',
-            'messages' => $errors,
-        ], 422);
-
-        throw new HttpResponseException($response);
-    }
-
 }
