@@ -35,10 +35,7 @@ final class ProbeTypeController
      */
     public function index(Request $request): JsonResponse
     {
-        $size = (int) $request->query('size', 5);
-        $probe_types = ProbeType::all()->paginate($size);
-
-        return $this->successResponse(ProbeTypeResource::collection($probe_types));
+        return $this->successResponse(ProbeTypeResource::collection(ProbeType::all()));
     }
 
     /**

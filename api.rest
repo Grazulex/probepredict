@@ -11,7 +11,7 @@ content-type: application/json
 client.test("Status code is 200", function() {
     client.assert(response.status === 200, "Expected 200 OK");
 });
-client.global.set("token", response.body.data.token);
+client.global.set("token", response.body.token);
 %}
 ###
 POST http://{{host}}/api/v1/probe-types HTTP/1.1
@@ -28,7 +28,7 @@ authorization: Bearer {{token}}
 client.test("Status code is 201", function() {
     client.assert(response.status === 201, "Expected 201 Created");
 });
-client.global.set("probe_type_id", response.body.data.id);
+client.global.set("probe_type_id", response.body.id);
 %}
 ###
 GET http://{{host}}/api/v1/probe-types HTTP/1.1
@@ -69,7 +69,7 @@ authorization: Bearer {{token}}
 client.test("Status code is 201", function() {
     client.assert(response.status === 201, "Expected 201 Created");
 });
-client.global.set("metric_type_id", response.body.data.id);
+client.global.set("metric_type_id", response.body.id);
 %}
 ###
 GET http://{{host}}/api/v1/metric-types HTTP/1.1
@@ -109,7 +109,7 @@ authorization: Bearer {{token}}
 client.test("Status code is 201", function() {
     client.assert(response.status === 201, "Expected 201 Created");
 });
-client.global.set("probe_id", response.body.data.id);
+client.global.set("probe_id", response.body.id);
 %}
 ###
 PUT http://{{host}}/api/v1/probes/{{probe_id}} HTTP/1.1
@@ -167,7 +167,7 @@ authorization: Bearer {{token}}
 client.test("Status code is 201", function() {
     client.assert(response.status === 201, "Expected 201 Created");
 });
-client.global.set("rule_id", response.body.data.id);
+client.global.set("rule_id", response.body.id);
 %}
 ###
 PUT http://{{host}}/api/v1/rules/{{rule_id}} HTTP/1.1
@@ -203,7 +203,25 @@ authorization: Bearer {{token}}
     client.test("Status code is 201", function() {
         client.assert(response.status === 201, "Expected 201 Created");
     });
-    client.global.set("metric_id", response.body.data.id);
+    client.global.set("metric_id", response.body.id);
+%}
+###
+POST http://{{host}}/api/v1/metrics HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+  "value": 45,
+  "metric_type_id": {{metric_type_id}},
+  "probe_id": {{probe_id}}
+}
+
+> {%
+    client.test("Status code is 201", function() {
+        client.assert(response.status === 201, "Expected 201 Created");
+    });
+    client.global.set("metric_id", response.body.id);
 %}
 ###
 GET http://{{host}}/api/v1/probes/{{probe_id}} HTTP/1.1

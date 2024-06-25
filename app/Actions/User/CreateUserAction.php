@@ -13,7 +13,6 @@ class CreateUserAction
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
         $user->assignRole('user');
-        $user->createToken('ProbePredict')->plainTextToken;
 
         return $user;
     }

@@ -32,7 +32,7 @@ final class DatabaseSeeder extends Seeder
         ]);
         $user->markEmailAsVerified();
         //Create api token
-        $user->createToken('api-token');
+        $user->createToken('ProbePredict');
 
         $role_admin = Role::create(['name' => 'administrator']);
         $role_user = Role::create(['name' => 'user']);
