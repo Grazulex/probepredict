@@ -12,8 +12,8 @@ use App\Http\Requests\V1\UpdateProbeRuleRequest;
 use App\Http\Resources\V1\ProbeRuleResource;
 use App\Models\ProbeRule;
 use App\Traits\JsonResponses;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

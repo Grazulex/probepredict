@@ -10,11 +10,12 @@ use App\Actions\Probes\UpdateProbeAction;
 use App\Http\Requests\V1\StoreProbeRequest;
 use App\Http\Requests\V1\UpdateProbeRequest;
 use App\Http\Resources\V1\ProbeCollection;
+use App\Http\Resources\V1\ProbeMetricCollection;
 use App\Http\Resources\V1\ProbeResource;
 use App\Models\Probe;
 use App\Traits\JsonResponses;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -36,7 +37,7 @@ final class ProbeController
      */
     public function index(Request $request): JsonResponse
     {
-        $size = (int) $request->query('size', 5);
+        $size = (int) $request->input('size', 5);
         $probes = Probe::sameTeam()->paginate($size);
 
         return $this->successResponse(new ProbeCollection($probes));
@@ -102,6 +103,27 @@ final class ProbeController
         );
 
         return $this->successResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Display a listing of the probe metrics.
+     *
+     * @param Probe $probe
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function metrics(Probe $probe, Request $request): JsonResponse
+    {
+        $size = (int) $request->input('size', 5);
+        $metric_type_id = $request->input('metric_type_id', null);
+
+        if ($metric_type_id) {
+            $metrics = $probe->metrics()->where('metric_type_id', $metric_type_id)->orderBy('id', 'desc')->paginate($size);
+        } else {
+            $metrics = $probe->metrics()->orderBy('id', 'desc')->paginate($size);
+        }
+
+        return $this->successResponse(new ProbeMetricCollection($metrics));
     }
 
     /**

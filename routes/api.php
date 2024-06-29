@@ -47,21 +47,22 @@ Route::prefix('v1')->group(function (): void {
                 Route::delete('/{probe}', 'destroy')->middleware(['can:delete probes','verify.team']);
                 Route::post('/', 'store')->middleware(['can:create probes']);
                 Route::get('/', 'index')->middleware(['can:list probes']);
+                Route::get('/{probe}/metrics', 'metrics')->middleware(['can:list metrics','verify.team']);
             });
 
         Route::controller(ProbeMetricController::class)
             ->prefix('metrics')
             ->group(function (): void {
                 Route::post('/', 'store')->middleware('can:create metrics');
-                Route::delete('/{probeMetric}', 'destroy')->middleware(['can:delete metrics','verify.team']); //need to add verify.team of probe middleware
+                Route::delete('/{probeMetric}', 'destroy')->middleware(['can:delete metrics','verify.team']);
             });
 
         Route::controller(ProbeRuleController::class)
             ->prefix('rules')
             ->group(function (): void {
                 Route::post('/', 'store')->middleware('can:create rules');
-                Route::put('/{probeRule}', 'update')->middleware(['can:create rules','verify.team']); //need to add verify.team middleware
-                Route::delete('/{probeRule}', 'destroy')->middleware(['can:delete rules','verify.team']); //need to add verify.team of probe middleware
+                Route::put('/{probeRule}', 'update')->middleware(['can:create rules','verify.team']);
+                Route::delete('/{probeRule}', 'destroy')->middleware(['can:delete rules','verify.team']);
             });
     });
 });

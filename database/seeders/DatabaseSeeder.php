@@ -8,11 +8,12 @@ use App\Enums\ProbeTypeEnum;
 use App\Models\MetricType;
 use App\Models\ProbeType;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 final class DatabaseSeeder extends Seeder
 {
@@ -46,6 +47,7 @@ final class DatabaseSeeder extends Seeder
 
         $create_metrics = Permission::create(['name' => 'create metrics']);
         $delete_metrics = Permission::create(['name' => 'delete metrics']);
+        $list_metrics = Permission::create(['name' => 'list metrics']);
 
         $create_rules = Permission::create(['name' => 'create rules']);
         $delete_rules = Permission::create(['name' => 'delete rules']);
@@ -57,6 +59,7 @@ final class DatabaseSeeder extends Seeder
         $role_admin->givePermissionTo($delete_probes);
         $role_admin->givePermissionTo($create_metrics);
         $role_admin->givePermissionTo($delete_metrics);
+        $role_admin->givePermissionTo($list_metrics);
         $role_admin->givePermissionTo($create_rules);
         $role_admin->givePermissionTo($delete_rules);
 
@@ -66,6 +69,7 @@ final class DatabaseSeeder extends Seeder
         $role_user->givePermissionTo($delete_probes);
         $role_user->givePermissionTo($create_metrics);
         $role_user->givePermissionTo($delete_metrics);
+        $role_user->givePermissionTo($list_metrics);
         $role_user->givePermissionTo($create_rules);
         $role_user->givePermissionTo($delete_rules);
 
@@ -76,6 +80,7 @@ final class DatabaseSeeder extends Seeder
         $delete_probes->assignRole($role_admin);
         $create_metrics->assignRole($role_admin);
         $delete_metrics->assignRole($role_admin);
+        $list_metrics->assignRole($role_admin);
         $create_rules->assignRole($role_admin);
         $delete_rules->assignRole($role_admin);
 
@@ -85,11 +90,12 @@ final class DatabaseSeeder extends Seeder
         $delete_probes->assignRole($role_user);
         $create_metrics->assignRole($role_user);
         $delete_metrics->assignRole($role_user);
+        $list_metrics->assignRole($role_user);
         $create_rules->assignRole($role_user);
         $delete_rules->assignRole($role_user);
 
         $user->assignRole(['administrator', 'user']);
-        $user->givePermissionTo(['administrator types', 'list types', 'create probes', 'list probes', 'delete probes', 'create metrics', 'delete metrics', 'create rules', 'delete rules']);
+        $user->givePermissionTo(['administrator types', 'list types', 'create probes', 'list probes', 'delete probes', 'create metrics', 'delete metrics', 'list metrics', 'create rules', 'delete rules']);
 
         ProbeType::factory()->create([
             'name' => 'Environmental',

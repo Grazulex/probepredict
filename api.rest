@@ -230,6 +230,18 @@ content-type: application/json
 authorization: Bearer {{token}}
 ###
 
+GET http://{{host}}/api/v1/probes/{{probe_id}}/metrics HTTP/1.1
+accept: application/json
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+  "size": 1,
+  "metric_type_id": {{metric_type_id}}
+}
+###
+
+
 DELETE http://{{host}}/api/v1/metrics/{{metric_id}} HTTP/1.1
 accept: application/json
 content-type: application/json

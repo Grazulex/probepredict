@@ -13,7 +13,7 @@ use App\Http\Resources\V1\MetricTypeResource;
 use App\Models\MetricType;
 use App\Traits\JsonResponses;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
