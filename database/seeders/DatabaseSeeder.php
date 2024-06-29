@@ -27,7 +27,7 @@ final class DatabaseSeeder extends Seeder
         $user = User::factory()->withPersonalTeam()->create([
             'name' => 'administrator',
             'email' => 'jms@grazulex.be',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('Katleen2229!'),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
