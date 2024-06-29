@@ -51,6 +51,7 @@ final class DatabaseSeeder extends Seeder
 
         $create_rules = Permission::create(['name' => 'create rules']);
         $delete_rules = Permission::create(['name' => 'delete rules']);
+        $list_rules = Permission::create(['name' => 'list rules']);
 
         $role_admin->givePermissionTo($admin_types);
         $role_admin->givePermissionTo($list_types);
@@ -62,6 +63,7 @@ final class DatabaseSeeder extends Seeder
         $role_admin->givePermissionTo($list_metrics);
         $role_admin->givePermissionTo($create_rules);
         $role_admin->givePermissionTo($delete_rules);
+        $role_admin->givePermissionTo($list_rules);
 
         $role_user->givePermissionTo($list_types);
         $role_user->givePermissionTo($list_probes);
@@ -72,6 +74,7 @@ final class DatabaseSeeder extends Seeder
         $role_user->givePermissionTo($list_metrics);
         $role_user->givePermissionTo($create_rules);
         $role_user->givePermissionTo($delete_rules);
+        $role_user->givePermissionTo($list_rules);
 
         $admin_types->assignRole($role_admin);
         $list_types->assignRole($role_admin);
@@ -83,6 +86,7 @@ final class DatabaseSeeder extends Seeder
         $list_metrics->assignRole($role_admin);
         $create_rules->assignRole($role_admin);
         $delete_rules->assignRole($role_admin);
+        $list_rules->assignRole($role_admin);
 
         $list_types->assignRole($role_user);
         $create_probes->assignRole($role_user);
@@ -93,9 +97,10 @@ final class DatabaseSeeder extends Seeder
         $list_metrics->assignRole($role_user);
         $create_rules->assignRole($role_user);
         $delete_rules->assignRole($role_user);
+        $list_rules->assignRole($role_user);
 
         $user->assignRole(['administrator', 'user']);
-        $user->givePermissionTo(['administrator types', 'list types', 'create probes', 'list probes', 'delete probes', 'create metrics', 'delete metrics', 'list metrics', 'create rules', 'delete rules']);
+        $user->givePermissionTo(['administrator types', 'list types', 'create probes', 'list probes', 'delete probes', 'create metrics', 'delete metrics', 'list metrics', 'create rules', 'delete rules', 'list rules']);
 
         ProbeType::factory()->create([
             'name' => 'Environmental',

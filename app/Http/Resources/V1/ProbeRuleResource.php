@@ -19,12 +19,22 @@ final class ProbeRuleResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'type' => 'rule',
             'id' => $this->id,
-            'probe' => $this->when('api/probes' !== $request->route()->getPrefix(), fn() => new ProbeResource($this->probe)),
-            'metric_type_id' => new MetricTypeResource($this->metric_type),
-            'operator' => $this->operator,
-            'condition' => $this->condition,
-            'estimation' => new DateTimeResource($this->estimation),
+            'attributes' => [
+                'operator' => $this->operator,
+                'condition' => $this->condition,
+                'estimation' => $this->estimation,
+            ],
+            'relationships' => [
+                'metric_type' => [
+                    'links' => [
+                        'self' => route('api.metric-types.show', ['metric_type' => $this->metric_type_id]),
+                        'related' => route('api.metric-types.show', ['metric_type' => $this->metric_type_id]),
+                    ],
+                    'data' => new MetricTypeResource($this->metric_type),
+                ],
+            ],
         ];
     }
 }

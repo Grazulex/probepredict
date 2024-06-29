@@ -12,6 +12,7 @@ use App\Http\Requests\V1\UpdateProbeRequest;
 use App\Http\Resources\V1\ProbeCollection;
 use App\Http\Resources\V1\ProbeMetricCollection;
 use App\Http\Resources\V1\ProbeResource;
+use App\Http\Resources\V1\ProbeRuleCollection;
 use App\Models\Probe;
 use App\Traits\JsonResponses;
 use Illuminate\Http\JsonResponse;
@@ -124,6 +125,21 @@ final class ProbeController
         }
 
         return $this->successResponse(new ProbeMetricCollection($metrics));
+    }
+
+    /**
+     * Display a listing of the probe rules.
+     *
+     * @param Probe $probe
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function rules(Probe $probe, Request $request): JsonResponse
+    {
+        $size = (int) $request->input('size', 5);
+        $rules = $probe->rules()->orderBy('id', 'desc')->paginate($size);
+
+        return $this->successResponse(new ProbeRuleCollection($rules));
     }
 
     /**

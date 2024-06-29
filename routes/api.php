@@ -23,9 +23,9 @@ Route::prefix('v1')->group(function (): void {
             ->prefix('probe-types')
             ->group(function (): void {
                 Route::get('/', 'index')->middleware('can:list types');
-                Route::get('/{id}', 'show')->middleware('can:list types');
-                Route::put('/{id}', 'update')->middleware('can:administrator types');
-                Route::delete('/{id}', 'destroy')->middleware('can:administrator types');
+                Route::get('/{probe_type}', 'show')->name('api.probe-types.show')->middleware('can:list types');
+                Route::put('/{probe_type}', 'update')->middleware('can:administrator types');
+                Route::delete('/{probe_type}', 'destroy')->middleware('can:administrator types');
                 Route::post('/', 'store')->middleware('can:administrator types');
             });
 
@@ -33,21 +33,22 @@ Route::prefix('v1')->group(function (): void {
             ->prefix('metric-types')
             ->group(function (): void {
                 Route::get('/', 'index')->middleware('can:list types');
-                Route::get('/{id}', 'show')->middleware('can:list types');
-                Route::put('/{id}', 'update')->middleware('can:administrator types');
-                Route::delete('/{id}', 'destroy')->middleware('can:administrator types');
+                Route::get('/{metric_type}', 'show')->name('api.metric-types.show')->middleware('can:list types');
+                Route::put('/{metric_type}', 'update')->middleware('can:administrator types');
+                Route::delete('/{metric_type}', 'destroy')->middleware('can:administrator types');
                 Route::post('/', 'store')->middleware('can:administrator types');
             });
 
         Route::controller(ProbeController::class)
             ->prefix('probes')
             ->group(function (): void {
-                Route::get('/{probe}', 'show')->middleware(['can:list probes','verify.team']);
+                Route::get('/{probe}', 'show')->name('api.probes.show')->middleware(['can:list probes','verify.team']);
                 Route::put('/{probe}', 'update')->middleware(['can:create probes','verify.team']);
                 Route::delete('/{probe}', 'destroy')->middleware(['can:delete probes','verify.team']);
                 Route::post('/', 'store')->middleware(['can:create probes']);
-                Route::get('/', 'index')->middleware(['can:list probes']);
-                Route::get('/{probe}/metrics', 'metrics')->middleware(['can:list metrics','verify.team']);
+                Route::get('/', 'index')->name('api.probes.list')->middleware(['can:list probes']);
+                Route::get('/{probe}/metrics', 'metrics')->name('api.probes.metrics')->middleware(['can:list metrics','verify.team']);
+                Route::get('/{probe}/rules', 'rules')->name('api.probes.rules')->middleware(['can:list rules','verify.team']);
             });
 
         Route::controller(ProbeMetricController::class)

@@ -14,9 +14,15 @@ final class ProbeTypeResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'type' => 'probe_type',
             'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
+            'attributes' => [
+                'name' => $this->name,
+                'description' => $this->description,
+            ],
+            'links' => [
+                'self' => route('api.probe-types.show', ['probe_type' => $this->id]),
+            ],
         ];
     }
 }

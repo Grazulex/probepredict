@@ -11,7 +11,7 @@ trait JsonResponses
 {
     public function successResponse($data, $code = Response::HTTP_OK): JsonResponse
     {
-        return response()->json($data, $code);
+        return response()->json($data, $code, [], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     }
 
     public function errorResponse($message, $code): JsonResponse

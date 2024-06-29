@@ -19,10 +19,16 @@ final class MetricTypeResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'type' => 'metric_type',
             'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'unit' => $this->unit,
+            'attributes' => [
+                'name' => $this->name,
+                'description' => $this->description,
+                'unit' => $this->unit,
+            ],
+            'links' => [
+                'self' => route('api.metric-types.show', ['metric_type' => $this->id]),
+            ],
         ];
     }
 }

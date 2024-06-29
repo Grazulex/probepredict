@@ -17,13 +17,10 @@ final class ProbeCollection extends ResourceCollection
     {
         return [
             'items' => $this->collection,
-            'pagination' => [
-                'current_page' => $this->resource->currentPage(),
-                'last_page' => $this->resource->lastPage(),
-                'per_page' => $this->resource->perPage(),
-                'total' => $this->resource->total(),
-                'next_page_url' => $this->resource->nextPageUrl(),
-                'prev_page_url' => $this->resource->previousPageUrl(),
+            'links' => [
+                'prev' => $this->resource->previousPageUrl(),
+                'self' => route('api.probes.list'),
+                'next' => $this->resource->nextPageUrl(),
             ],
         ];
     }

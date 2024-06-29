@@ -19,10 +19,27 @@ final class ProbeMetricResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'type' => 'metric',
             'id' => $this->id,
-            'metric_type' => new MetricTypeResource($this->metric_type),
-            'value' => $this->value,
-            'created_at' => new DateTimeResource($this->created_at),
+            'attributes' => [
+                'value' => $this->value,
+                'created_at' => new DateTimeResource($this->created_at),
+            ],
+            'relationships' => [
+                'probe' => [
+                    'links' => [
+                        'self' => route('api.probes.show', ['probe' => $this->probe_id]),
+                        'related' => route('api.probes.show', ['probe' => $this->probe_id]),
+                    ],
+                ],
+                'metric_type' => [
+                    'links' => [
+                        'self' => route('api.metric-types.show', ['metric_type' => $this->metric_type_id]),
+                        'related' => route('api.metric-types.show', ['metric_type' => $this->metric_type_id]),
+                    ],
+                    'data' => new MetricTypeResource($this->metric_type),
+                ],
+            ],
         ];
     }
 }

@@ -17,18 +17,39 @@ final class ProbeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $metrics = $this->metrics->groupBy('metric_type_id')->map(fn($metric) => $metric->sortByDesc('created_at')->first());
-
         return [
+            'type' => 'probe',
             'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'stats_ongoing' => $this->stats_ongoing,
-            'probe_type' => new ProbeTypeResource($this->probeType),
-            'created_at' => new DateTimeResource($this->created_at),
-            'updated_at' => new DateTimeResource($this->updated_at),
-            'rules' => $this->when('api/probes' === $request->route()->getPrefix(), fn() => ProbeRuleResource::collection($this->rules)),
-            'last_metrics' => ProbeMetricResource::collection($metrics),
+            'attributes' => [
+                'name' => $this->name,
+                'description' => $this->description,
+                'stats_ongoing' => $this->stats_ongoing,
+                'created_at' => new DateTimeResource($this->created_at),
+            ],
+            'relationships' => [
+                'probe_type' => [
+                    'links' => [
+                        'self' => route('api.probe-types.show', ['probe_type' => $this->probe_type_id]),
+                        'related' => route('api.probe-types.show', ['probe_type' => $this->probe_type_id]),
+                    ],
+                    'data' => new ProbeTypeResource($this->probeType),
+                ],
+                'metrics' => [
+                    'links' => [
+                        'self' => route('api.probes.metrics', ['probe' => $this->id]),
+                        'related' => route('api.probes.metrics', ['probe' => $this->id]),
+                    ],
+                ],
+                'rules' => [
+                    'links' => [
+                        'self' => route('api.probes.rules', ['probe' => $this->id]),
+                        'related' => route('api.probes.rules', ['probe' => $this->id]),
+                    ],
+                ],
+            ],
+            'links' => [
+                'self' => route('api.probes.show', ['probe' => $this->id]),
+            ],
         ];
     }
 }
