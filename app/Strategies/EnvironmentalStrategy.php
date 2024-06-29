@@ -22,9 +22,8 @@ final class EnvironmentalStrategy implements CalculationStrategy
         }
         $metrics = $probes->metrics->where('metric_type_id', $metricTypes->id)->sortBy('created_at');
         $diff_per_sec = 0;
-        $quantity = 0;
+        $quantity = $metrics->count();
         foreach ($metrics as $metric) {
-            $quantity = $metrics->count();
             $firstMetric = $metric;
             $nextMetric = ProbeMetric::where('id', '>', $metric->id)
                 ->where('metric_type_id', $metricTypes->id)
@@ -37,7 +36,7 @@ final class EnvironmentalStrategy implements CalculationStrategy
                 $diff_per_sec = $diff_per_sec + ($value_difference / $time_difference);
             }
         }
-        if ($quantity > 1) {
+        if ($quantity > 1 && $diff_per_sec > 0) {
             $time_to_condition = 0;
             $probeMetric = $metrics->last();
             switch ($operator) {
