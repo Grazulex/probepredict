@@ -16,7 +16,6 @@ final class ProbeTypeFactory extends Factory
         return [
             'name' => $this->faker->name,
             'description' => $this->faker->text,
-            'enum' => $this->faker->randomElement(['environment', 'car', 'battery']),
         ];
     }
 }

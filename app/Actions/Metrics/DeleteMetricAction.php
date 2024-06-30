@@ -17,7 +17,7 @@ class DeleteMetricAction
         $probe = $probeMetric->probe;
 
         $this->updateOnGoingProbesAction->handle(
-            isAdding: false,
+            isAdding: true,
             probe: $probe,
         );
 

@@ -7,6 +7,7 @@ namespace App\Http\Resources\V1;
 use App\Models\ProbeRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 /** @mixin ProbeRule */
 final class ProbeRuleResource extends JsonResource
@@ -25,6 +26,7 @@ final class ProbeRuleResource extends JsonResource
                 'operator' => $this->operator,
                 'condition' => $this->condition,
                 'estimation' => $this->estimation,
+                'class' => Str::camel($this->metric_type()->first()->name) . 'Strategy',
             ],
             'relationships' => [
                 'metric_type' => [

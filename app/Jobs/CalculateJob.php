@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Actions\Probes\UpdateOnGoingProbeAction;
 use App\Models\MetricType;
 use App\Models\Probe;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -23,10 +25,11 @@ class CalculateJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected Probe $probe, protected MetricType $metric_type) {}
+    public function __construct(protected Probe $probe, protected MetricType $metric_type, protected UpdateOnGoingProbeAction $updateOnGoingProbesAction) {}
 
     /**
      * Execute the job.
+     * @throws Exception
      */
     public function handle(): void
     {
@@ -36,11 +39,12 @@ class CalculateJob implements ShouldQueue
         } else {
             foreach ($rules as $rule) {
                 $NameStrategy = Str::camel($rule->metric_type()->first()->name) . 'Strategy';
-                if (class_exists('App\Strategies\\' . $NameStrategy)) {
+                if (class_exists('App\\Strategies\\' . $NameStrategy)) {
                     $strategy = new $NameStrategy();
                     $strategy->calculate($this->probe, $this->metric_type);
                 } else {
-                    $this->resetOnGoingStats();
+                    // If the strategy does not exist, return error of job
+                    throw new Exception('Strategy ' . $NameStrategy . ' not found');
                 }
             }
         }
@@ -48,7 +52,9 @@ class CalculateJob implements ShouldQueue
 
     private function resetOnGoingStats(): void
     {
-        $this->probe->stats_ongoing = $this->probe->stats_ongoing - 1;
-        $this->probe->save();
+        $this->updateOnGoingProbesAction->handle(
+            isAdding: false,
+            probe: $this->probe,
+        );
     }
 }
