@@ -32,8 +32,13 @@ final class PercentageStrategy implements CalculationStrategy
                 ->first();
             if (null !== $nextMetric) {
                 $time_difference = ($firstMetric->created_at->diffInSeconds($nextMetric->created_at));
-                $value_difference = abs((int) $nextMetric->value - (int) $firstMetric->value);
-                $diff_per_sec = $diff_per_sec + ($value_difference / $time_difference);
+                if ($nextMetric->value < $firstMetric->value) {
+                    $value_difference = $firstMetric->value - $nextMetric->value;
+                    $diff_per_sec = $diff_per_sec + ($value_difference / $time_difference);
+                } else {
+                    $value_difference = $nextMetric->value - $firstMetric->value;
+                    $diff_per_sec = $diff_per_sec - ($value_difference / $time_difference);
+                }
             }
         }
         $diff_per_sec = $diff_per_sec / $quantity;
@@ -42,13 +47,13 @@ final class PercentageStrategy implements CalculationStrategy
             $probeMetric = $metrics->last();
             switch ($operator) {
                 case '>':
-                    $time_to_condition = ($condition - (int) $probeMetric->value) / ($diff_per_sec / $quantity);
+                    $time_to_condition = ($condition - $probeMetric->value) / ($diff_per_sec / $quantity);
                     break;
                 case '<':
-                    $time_to_condition = ((int) $probeMetric->value - $condition) / ($diff_per_sec / $quantity);
+                    $time_to_condition = ($probeMetric->value - $condition) / ($diff_per_sec / $quantity);
                     break;
                 case '=':
-                    $time_to_condition = abs($condition - (int) $probeMetric->value) / ($diff_per_sec / $quantity);
+                    $time_to_condition = abs($condition - $probeMetric->value) / ($diff_per_sec / $quantity);
                     break;
             }
             if (null !== $rule) {
