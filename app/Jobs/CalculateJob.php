@@ -40,7 +40,7 @@ class CalculateJob implements ShouldQueue
             $this->resetOnGoingStats();
         } else {
             foreach ($rules as $rule) {
-                $NameStrategy = 'App\\Strategies\\' . Str::ucfirst(Str::camel($rule->metric_type()->first()->name) . 'Strategy');
+                $NameStrategy = 'App\\Strategies\\' . Str::ucfirst(Str::camel($rule->metric_type()->first()->name)) . 'Strategy';
                 try {
                     $strategy = new $NameStrategy();
                     $strategy->calculate($this->probe, $this->metric_type);
