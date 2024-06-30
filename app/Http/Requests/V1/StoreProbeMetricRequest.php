@@ -14,7 +14,7 @@ class StoreProbeMetricRequest extends BaseRequest
         return [
             'probe_id' => ['required', 'exists:probes,id,team_id,' . $this->user()->currentTeam->id],
             'metric_type_id' => ['required', 'exists:metric_types,id'],
-            'value' => ['required'],
+            'value' => ['required', 'numeric'],
         ];
     }
 }

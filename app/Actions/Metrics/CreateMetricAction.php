@@ -11,6 +11,8 @@ class CreateMetricAction
 {
     public function handle(array $input): ProbeMetric
     {
+        $input['value'] = number_format($input['value'], 1);
+
         $value = $input['value'];
         $metric_type_id = $input['metric_type_id'];
 
