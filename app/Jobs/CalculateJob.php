@@ -27,7 +27,7 @@ class CalculateJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected Probe $probe, protected MetricType $metric_type, protected UpdateOnGoingProbeAction $updateOnGoingProbesAction) {}
+    public function __construct(protected Probe $probe, protected MetricType $metric_type) {}
 
     /**
      * Execute the job.
@@ -55,7 +55,8 @@ class CalculateJob implements ShouldQueue
 
     private function resetOnGoingStats(): void
     {
-        $this->updateOnGoingProbesAction->handle(
+        $ongoing = new UpdateOnGoingProbeAction();
+        $ongoing->handle(
             isAdding: false,
             probe: $this->probe,
         );
