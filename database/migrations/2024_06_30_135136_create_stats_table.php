@@ -18,8 +18,8 @@ return new class () extends Migration {
             $table->foreignId('metric_type_id')->constrained();
             $table->foreignId('probe_id')->constrained();
 
-            $table->timestamp('started_at');
-            $table->timestamp('ended_at');
+            $table->dateTime('started_at')->default(now());
+            $table->dateTime('ended_at')->nullable(true);
 
             $table->float('avg_increase_minute', 8, 2)->default(0);
             $table->float('avg_decrease_minute', 8, 2)->default(0);
