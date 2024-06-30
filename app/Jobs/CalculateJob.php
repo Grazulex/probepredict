@@ -13,7 +13,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use ReflectionException;
 
 class CalculateJob implements ShouldQueue
 {
@@ -39,12 +41,13 @@ class CalculateJob implements ShouldQueue
         } else {
             foreach ($rules as $rule) {
                 $NameStrategy = Str::ucfirst(Str::camel($rule->metric_type()->first()->name) . 'Strategy');
-                if (class_exists('App\\Strategies\\' . $NameStrategy)) {
+                try {
                     $strategy = new $NameStrategy();
                     $strategy->calculate($this->probe, $this->metric_type);
-                } else {
-                    // If the strategy does not exist, return error of job
-                    throw new Exception('Strategy ' . $NameStrategy . ' not found');
+                } catch (ReflectionException $e) {
+                    Log::error("Class {$NameStrategy} not found: " . $e->getMessage());
+                } catch (Exception $e) {
+                    Log::error("An error occurred: " . $e->getMessage());
                 }
             }
         }
