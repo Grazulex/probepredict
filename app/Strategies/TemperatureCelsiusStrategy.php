@@ -36,6 +36,7 @@ final class TemperatureCelsiusStrategy implements CalculationStrategy
                 $diff_per_sec = $diff_per_sec + ($value_difference / $time_difference);
             }
         }
+        $diff_per_sec = $diff_per_sec / $quantity;
         if ($quantity > 1 && $diff_per_sec > 0) {
             $time_to_condition = 0;
             $probeMetric = $metrics->last();
