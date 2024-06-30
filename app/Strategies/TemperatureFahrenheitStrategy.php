@@ -8,7 +8,7 @@ use App\Models\MetricType;
 use App\Models\Probe;
 use App\Models\ProbeMetric;
 
-final class EnvironmentalStrategy implements CalculationStrategy
+final class TemperatureFahrenheitStrategy implements CalculationStrategy
 {
     public function calculate(Probe $probes, MetricType $metricTypes): void
     {

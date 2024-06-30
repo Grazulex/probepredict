@@ -32,4 +32,5 @@ final class MetricType extends Model
     {
         return $this->hasMany(ProbeMetric::class);
     }
+
 }

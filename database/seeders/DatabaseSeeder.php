@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\ProbeTypeEnum;
 use App\Models\MetricType;
 use App\Models\ProbeType;
 use App\Models\User;
@@ -105,17 +104,14 @@ final class DatabaseSeeder extends Seeder
         ProbeType::factory()->create([
             'name' => 'Environmental',
             'description' => 'Environmental probes (temperature, humidity, ...)',
-            'enum' => ProbeTypeEnum::ENVIRONMENT->value,
         ]);
         ProbeType::factory()->create([
             'name' => 'Battery',
             'description' => 'Battery probes (voltage, current, ...)',
-            'enum' => ProbeTypeEnum::BATTERY->value,
         ]);
         ProbeType::factory()->create([
             'name' => 'Car',
             'description' => 'Car probes (voltage, km, ...)',
-            'enum' => ProbeTypeEnum::CAR->value,
         ]);
         MetricType::factory()->create([
             'name' => 'Temperature Celsius',

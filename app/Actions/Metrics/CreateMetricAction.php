@@ -22,7 +22,6 @@ class CreateMetricAction
 
         CalculateJob::dispatch(
             probe : $probeMetric->probe,
-            probe_type : $probeMetric->probe->probeType,
             metric_type: $probeMetric->metric_type,
         );
 
