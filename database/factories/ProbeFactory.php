@@ -20,7 +20,6 @@ final class ProbeFactory extends Factory
             'probe_type_id' => ProbeType::factory()->create()->id,
             'name' => $this->faker->name,
             'description' => $this->faker->sentence,
-            'stats_ongoing' => 0,
         ];
     }
 }

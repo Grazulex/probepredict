@@ -23,7 +23,6 @@ final class ProbeResource extends JsonResource
             'attributes' => [
                 'name' => $this->name,
                 'description' => $this->description,
-                'stats_ongoing' => $this->stats_ongoing,
                 'created_at' => new DateTimeResource($this->created_at),
             ],
             'relationships' => [

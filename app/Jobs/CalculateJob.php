@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Actions\Probes\UpdateOnGoingProbeAction;
 use App\Models\MetricType;
 use App\Models\Probe;
 use Exception;
@@ -36,29 +35,17 @@ class CalculateJob implements ShouldQueue
     public function handle(): void
     {
         $rules = $this->probe->rules;
-        if ($rules->isEmpty()) {
-            $this->resetOnGoingStats();
-        } else {
-            foreach ($rules as $rule) {
-                $NameStrategy = 'App\\Strategies\\' . Str::ucfirst(Str::camel($rule->metric_type()->first()->name)) . 'Strategy';
-                try {
-                    $strategy = new $NameStrategy();
-                    $strategy->calculate($this->probe, $this->metric_type);
-                } catch (ReflectionException $e) {
-                    Log::error("Class {$NameStrategy} not found: " . $e->getMessage());
-                } catch (Exception $e) {
-                    Log::error("An error occurred: " . $e->getMessage());
-                }
+        foreach ($rules as $rule) {
+            $NameStrategy = 'App\\Strategies\\' . Str::ucfirst(Str::camel($rule->metric_type()->first()->name)) . 'Strategy';
+            try {
+                $strategy = new $NameStrategy();
+                $strategy->calculate($this->probe, $this->metric_type);
+            } catch (ReflectionException $e) {
+                Log::error("Class {$NameStrategy} not found: " . $e->getMessage());
+            } catch (Exception $e) {
+                Log::error("An error occurred: " . $e->getMessage());
             }
         }
     }
 
-    private function resetOnGoingStats(): void
-    {
-        $ongoing = new UpdateOnGoingProbeAction();
-        $ongoing->handle(
-            isAdding: false,
-            probe: $this->probe,
-        );
-    }
 }

@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $probe_type_id
  * @property string $name
  * @property string $description
- * @property int $stats_ongoing
  * @property DateTime $created_at
  * @property DateTime $updated_at
  * @property-read Team $team
@@ -38,7 +37,6 @@ final class Probe extends Model
         'probe_type_id',
         'name',
         'description',
-        'stats_ongoing',
     ];
 
     /**
