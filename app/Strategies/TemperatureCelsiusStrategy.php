@@ -55,7 +55,5 @@ final class TemperatureCelsiusStrategy implements CalculationStrategy
                 $rule->save();
             }
         }
-        $probes->stats_ongoing = $probes->stats_ongoing - 1;
-        $probes->save();
     }
 }
