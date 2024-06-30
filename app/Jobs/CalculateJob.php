@@ -33,14 +33,15 @@ class CalculateJob implements ShouldQueue
         $rules = $this->probe->rules;
         if ($rules->isEmpty()) {
             $this->resetOnGoingStats();
-        }
-        foreach ($rules as $rule) {
-            $NameStrategy =  Str::camel($rule->metric_type()->name) . 'Strategy';
-            if (class_exists('App\Strategies\\' . $NameStrategy)) {
-                $strategy = new $NameStrategy();
-                $strategy->calculate($this->probe, $this->metric_type);
-            } else {
-                $this->resetOnGoingStats();
+        } else {
+            foreach ($rules as $rule) {
+                $NameStrategy = Str::camel($rule->metric_type()->first()->name) . 'Strategy';
+                if (class_exists('App\Strategies\\' . $NameStrategy)) {
+                    $strategy = new $NameStrategy();
+                    $strategy->calculate($this->probe, $this->metric_type);
+                } else {
+                    $this->resetOnGoingStats();
+                }
             }
         }
     }
