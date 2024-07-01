@@ -13,8 +13,8 @@ interface CalculationStrategy
 {
     public function calculate(Probe $probes, MetricType $metricTypes): void;
 
-    function calculateDiffPerSec(Collection $metrics,MetricType $metricTypes,Probe $probes): float;
+    public function calculateDiffPerSec(Collection $metrics, MetricType $metricTypes, Probe $probes): float;
 
-    function calculateTimeToCondition(ProbeMetric $probeMetric,float $condition,string $operator,float $diff_per_sec, int $quantity): float;
+    public function calculateTimeToCondition(ProbeMetric $probeMetric, float $condition, string $operator, float $diff_per_sec, int $quantity): float;
 
 }

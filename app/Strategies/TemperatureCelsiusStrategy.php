@@ -4,7 +4,4 @@ declare(strict_types=1);
 
 namespace App\Strategies;
 
-final class TemperatureCelsiusStrategy extends DefaultStrategy
-{
-    //
-}
+final class TemperatureCelsiusStrategy extends DefaultStrategy {}

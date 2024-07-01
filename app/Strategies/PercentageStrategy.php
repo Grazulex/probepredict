@@ -4,7 +4,4 @@ declare(strict_types=1);
 
 namespace App\Strategies;
 
-final class PercentageStrategy extends DefaultStrategy
-{
-    //
-}
+final class PercentageStrategy extends DefaultStrategy {}
